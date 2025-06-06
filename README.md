@@ -233,7 +233,7 @@ yarn deploy
   </a>
   
   <p style="margin-top: 15px;">
-    <a href="https://tiny-bush-0bef.realyourdad.workers.dev/" target="_blank">
+    <a href="https://buymeacoke.realyourdad.workers.dev/" target="_blank">
       <img src="https://img.shields.io/badge/Buy_Me_A_Coke-FF5E5B?style=for-the-badge&logo=coca-cola&logoColor=white" alt="Buy Me A Coke" width="200" style="border-radius: 8px;" height="51" />
     </a>
   </p>
