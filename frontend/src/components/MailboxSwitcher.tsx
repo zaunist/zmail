@@ -87,11 +87,6 @@ const MailboxSwitcher: React.FC<MailboxSwitcherProps> = ({
       } else {
         // 添加新邮箱
         mailboxes.push(mailbox);
-        
-        // 最多保存5个邮箱
-        if (mailboxes.length > 5) {
-          mailboxes = mailboxes.slice(-5);
-        }
       }
       
       // 更新状态和本地存储
@@ -129,7 +124,7 @@ const MailboxSwitcher: React.FC<MailboxSwitcherProps> = ({
           <div className="text-xs font-medium px-2 py-1 text-muted-foreground">
             {t('mailbox.savedMailboxes') || "已保存的邮箱"}
           </div>
-          <div className="max-h-[200px] overflow-y-auto">
+          <div className="max-h-[400px] overflow-y-auto">
             {savedMailboxes.map((m) => (
               <button
                 key={m.address}
@@ -148,4 +143,4 @@ const MailboxSwitcher: React.FC<MailboxSwitcherProps> = ({
   );
 };
 
-export default MailboxSwitcher; 
+export default MailboxSwitcher;
