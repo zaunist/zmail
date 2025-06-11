@@ -22,7 +22,10 @@
     "empty": "No data",
     "blog": "Blog",
     "youtube": "YouTube",
-    "xugouMonitor": "Xugou Monitor"
+    "xugouMonitor": "Xugou Monitor",
+    "privacyPolicy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "about": "About Us"
   },
   "mailbox": {
     "createRandom": "Create Random Mailbox",
@@ -92,5 +95,237 @@
   "errors": {
     "generic": "An error occurred, please try again later",
     "notFound": "The requested resource was not found"
+  },
+  "intro": {
+    "features": {
+      "title": "Core Features",
+      "privacy": {
+        "title": "Privacy Protection",
+        "description": "No registration required, no personal information collected, completely anonymous"
+      },
+      "temporary": {
+        "title": "Temporary Email",
+        "description": "24-hour validity period, automatic expiration and deletion, avoid spam troubles"
+      },
+      "anonymous": {
+        "title": "Anonymous Reception",
+        "description": "Protect your real email address, prevent information leakage and harassment"
+      },
+      "instant": {
+        "title": "Instant Creation",
+        "description": "One-click generation of temporary email, ready to use immediately, simple and convenient"
+      }
+    },
+    "useCases": {
+      "title": "Use Cases",
+      "verification": {
+        "title": "One-time Verification",
+        "description": "Receive verification codes, confirmation emails and other temporary verification needs"
+      },
+      "downloads": {
+        "title": "Software Downloads",
+        "description": "Avoid marketing emails when downloading software and getting resources"
+      },
+      "testing": {
+        "title": "Testing & Verification",
+        "description": "Ideal tool for development testing and email verification functions"
+      }
+    },
+    "security": {
+      "title": "Security Notice",
+      "warning1": "Do not use for receiving important or sensitive information, temporary email does not guarantee data security",
+      "warning2": "Email content may be accessed by others, please avoid including personal privacy information",
+      "warning3": "The mailbox will be automatically deleted after 24 hours, please save important content in time"
+    },
+    "faq": {
+      "title": "FAQ",
+      "q1": {
+        "question": "How long is the mailbox valid?",
+        "answer": "All mailboxes are valid for 24 hours and will be automatically deleted after expiration."
+      },
+      "q2": {
+        "question": "Can I send emails?",
+        "answer": "This service only supports receiving emails, not sending emails."
+      },
+      "q3": {
+        "question": "Is email content secure?",
+        "answer": "All email content is only stored during the validity period and will be automatically deleted after expiration. Please check important information in time."
+      }
+    }
+  },
+  "terms": {
+    "title": "Terms of Service",
+    "subtitle": "Please read the following terms carefully before using this temporary email service. Using the service means you agree to this agreement.",
+    "section1": {
+      "title": "1. Service Description",
+      "item1": "This service provides users with temporary, anonymous email addresses for receiving emails, verification codes and other information.",
+      "item2": "All mailboxes and email content are temporarily stored and automatically deleted after expiration, and cannot be recovered."
+    },
+    "section2": {
+      "title": "2. User Responsibilities",
+      "item1": "Users should comply with relevant laws and regulations and shall not use this service for any illegal, irregular or harmful activities.",
+      "item2": "Users should bear all risks and responsibilities arising from the use of this service."
+    },
+    "section3": {
+      "title": "3. Prohibited Behaviors",
+      "item1": "Shall not be used to send or receive spam, malware, phishing information and other illegal content.",
+      "item2": "Shall not be used for harassment, fraud, infringement of others' privacy or intellectual property rights.",
+      "item3": "Shall not attempt to attack, interfere with or destroy the normal operation of this service."
+    },
+    "section4": {
+      "title": "4. Disclaimer",
+      "item1": "This service is a free open source project, provided \"as is\", and makes no commitment to the availability, stability or data integrity of the service.",
+      "item2": "The developer assumes no responsibility for any direct or indirect losses caused by the use of this service."
+    },
+    "section5": {
+      "title": "5. Service Changes and Termination",
+      "item1": "We have the right to adjust, suspend or terminate the service content at any time without prior notice to users.",
+      "item2": "If users are found to have violations, we have the right to restrict or terminate their use of this service."
+    },
+    "section6": {
+      "title": "6. Applicable Law",
+      "item1": "The interpretation and application of these terms of use are governed by the relevant laws and regulations of the open source project hosting location."
+    },
+    "section7": {
+      "title": "7. Terms Changes",
+      "item1": "We have the right to modify these terms of use at any time as needed, and changes will be announced in a prominent position on the page."
+    },
+    "conclusion": "Thank you for using zmail temporary email service!"
+  },
+  "about": {
+    "title": "About Us",
+    "subtitle": "Learn about the background and philosophy of zmail temporary email service.",
+    "intro": {
+      "title": "Project Introduction",
+      "content": "zmail is an open source temporary email service designed to provide users with secure and convenient temporary email solutions. We are committed to protecting user privacy and avoiding spam troubles."
+    },
+    "features": {
+      "title": "Core Features",
+      "free": {
+        "title": "Completely Free",
+        "desc": "No registration required, no payment required, completely free to use."
+      },
+      "instant": {
+        "title": "Instant Generation",
+        "desc": "Generate temporary email addresses with one click, ready to use immediately."
+      },
+      "autodestroy": {
+        "title": "Auto Destroy",
+        "desc": "Mailboxes are automatically destroyed after 24 hours to protect privacy."
+      },
+      "realtime": {
+        "title": "Real-time Receiving",
+        "desc": "Receive emails in real time with auto-refresh support."
+      },
+      "opensource": {
+        "title": "Open Source Transparency",
+        "desc": "Code is completely open source, secure and trustworthy."
+      }
+    },
+    "usecases": {
+      "title": "Use Cases",
+      "registration": "Website registration verification",
+      "download": "Download resource verification",
+      "temporary": "Temporary communication needs",
+      "spam": "Avoid spam"
+    },
+    "tech": {
+      "title": "Technical Architecture",
+      "intro": "zmail is built with modern technology stack:",
+      "frontend": {
+        "title": "Frontend",
+        "desc": "React + TypeScript + Tailwind CSS"
+      },
+      "backend": {
+        "title": "Backend",
+        "desc": "Honojs + CloudFlare Worker"
+      },
+      "email": {
+        "title": "Email Service",
+        "desc": "Based on CloudFlare email service to provide free temporary mailboxes, stable and reliable"
+      },
+      "storage": {
+        "title": "Data Storage",
+        "desc": "Memory storage with scheduled cleanup"
+      }
+    },
+    "opensource": {
+      "title": "Open Source Information",
+      "intro": "zmail is a completely open source project that follows the MIT open source license. We welcome community contributions, suggestions or issue reports.",
+      "github": {
+        "title": "GitHub Repository"
+      },
+      "license": {
+        "title": "License",
+        "desc": "MIT License"
+      },
+      "contribute": {
+        "title": "Contribution Guide",
+        "desc": "Welcome to submit Pull Requests and Issues"
+      }
+    },
+    "contact": {
+      "title": "Contact Us",
+      "intro": "If you encounter problems during use, or have any suggestions and feedback, please contact us through the following methods:",
+      "github": {
+        "title": "GitHub Issues",
+        "desc": "Submit Issues in the project repository"
+      },
+      "email": {
+        "title": "Email"
+      }
+    },
+    "conclusion": "Thank you for choosing zmail temporary email service!"
+    },
+  "privacy": {
+    "title": "Privacy Policy",
+    "intro": "We take your privacy protection very seriously. This privacy policy explains how we collect, use and protect your information.",
+    "section1": {
+      "title": "Information Collection",
+      "item1": "We do not require users to register or provide personal information.",
+      "item2": "We do not collect users' names, email addresses or other personal identification information.",
+      "item3": "We may collect anonymous usage statistics, such as visit counts and usage time, to improve service quality."
+    },
+    "section2": {
+      "title": "Information Use",
+      "item1": "Temporary email addresses are only used to receive emails and will not be used for other purposes.",
+      "item2": "We will not sell, trade or transfer any of your information to third parties.",
+      "item3": "Collected anonymous statistics are only used for analysis and service improvement."
+    },
+    "section3": {
+      "title": "Data Storage",
+      "item1": "All email content is temporarily stored in memory and will not be persisted to disk.",
+      "item2": "Mailboxes and their contents are automatically deleted after 24 hours and cannot be recovered.",
+      "item3": "We do not keep backups of any user data."
+    },
+    "section4": {
+      "title": "Third-party Services",
+      "item1": "This website may use third-party analytics tools (such as Google Analytics) to understand website usage.",
+      "item2": "These third-party services have their own privacy policies, and we recommend that you review the relevant policies.",
+      "item3": "We are not responsible for the privacy practices of third-party services."
+    },
+    "section5": {
+      "title": "Cookie Usage",
+      "item1": "We may use cookies to improve user experience, such as saving language preferences.",
+      "item2": "You can disable cookies through browser settings, but this may affect website functionality.",
+      "item3": "We do not use cookies to track personal identification information."
+    },
+    "section6": {
+      "title": "Security Measures",
+      "item1": "We adopt appropriate technical and administrative measures to protect data security.",
+      "item2": "All data transmission is encrypted through HTTPS.",
+      "item3": "Although we strive to protect data security, we cannot guarantee absolute security."
+    },
+    "section7": {
+      "title": "Policy Changes",
+      "item1": "We may update this privacy policy from time to time.",
+      "item2": "Significant changes will be announced in a prominent position on the website.",
+      "item3": "Continued use of the service indicates your acceptance of the updated policy."
+    },
+    "section8": {
+      "title": "Contact Us",
+      "item1": "If you have any questions about this privacy policy, please contact us through GitHub Issues."
+    },
+    "conclusion": "Thank you for trusting and using zmail temporary email service!"
   }
-} 
+}

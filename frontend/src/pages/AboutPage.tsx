@@ -1,55 +1,61 @@
 import React from "react";
+import { useTranslation } from 'react-i18next';
 import Container from "../components/Container";
 
 const AboutPage: React.FC = () => {
+  const { t } = useTranslation();
+  
   return (
     <Container>
       <div className="prose max-w-none mx-auto">
-        <h1 className="text-3xl font-bold mb-4 text-center">关于我们</h1>
-        <p className="text-lg text-center mb-8 text-muted-foreground">
-          ZMAIL - 24小时匿名邮箱，开源、免费、极简、安全
-        </p>
-        <h2 className="text-xl font-semibold mt-8 mb-2">项目简介</h2>
-        <p>
-          本项目致力于为用户提供一个无需注册、即开即用的临时邮箱服务，帮助用户在注册网站、接收验证码、保护隐私等场景下，免受垃圾邮件和隐私泄露困扰。
-        </p>
-        <h2 className="text-xl font-semibold mt-8 mb-2">我们的理念</h2>
+        <h1 className="text-3xl font-bold mb-4 text-center">{t('about.title')}</h1>
+        <p className="text-lg text-center mb-8 text-muted-foreground">{t('about.subtitle')}</p>
+        
+        <h2 className="text-xl font-semibold mt-8 mb-2">{t('about.intro.title')}</h2>
+        <p>{t('about.intro.content')}</p>
+        
+        <h2 className="text-xl font-semibold mt-8 mb-2">{t('about.features.title')}</h2>
         <ul>
-          <li>极简体验：无需注册，打开即用，界面简洁友好。</li>
-          <li>隐私优先：不收集用户个人信息，邮件自动过期删除。</li>
-          <li>开源透明：所有代码开源，欢迎社区参与和监督。</li>
+          <li><strong>{t('about.features.free.title')}</strong>：{t('about.features.free.desc')}</li>
+          <li><strong>{t('about.features.instant.title')}</strong>：{t('about.features.instant.desc')}</li>
+          <li><strong>{t('about.features.autodestroy.title')}</strong>：{t('about.features.autodestroy.desc')}</li>
+          <li><strong>{t('about.features.realtime.title')}</strong>：{t('about.features.realtime.desc')}</li>
+          <li><strong>{t('about.features.opensource.title')}</strong>：{t('about.features.opensource.desc')}</li>
         </ul>
-        <h2 className="text-xl font-semibold mt-8 mb-2">开源与贡献</h2>
-        <p>
-          本项目完全开源，代码托管于{" "}
-          <a
-            href="https://github.com/zaunist/zmail"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-primary underline"
-          >
-            GitHub
-          </a>
-          ，欢迎任何人提出建议、反馈或贡献代码。
-        </p>
-        <h2 className="text-xl font-semibold mt-8 mb-2">联系我们</h2>
-        <p>
-          如有任何问题或合作意向，可通过{" "}
-          <a
-            href="https://github.com/zaunist/zmail/issues"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-primary underline"
-          >
-            GitHub Issues
-          </a>{" "}
-          留言，或在开源社区与我们交流。
-        </p>
-        <div className="text-center mt-10">
-          <span className="inline-block px-4 py-2 bg-primary text-primary-foreground rounded-full text-base font-medium shadow">
-            感谢您的关注与支持！
-          </span>
-        </div>
+        
+        <h2 className="text-xl font-semibold mt-8 mb-2">{t('about.usecases.title')}</h2>
+        <ul>
+          <li>{t('about.usecases.registration')}</li>
+          <li>{t('about.usecases.download')}</li>
+          <li>{t('about.usecases.temporary')}</li>
+          <li>{t('about.usecases.spam')}</li>
+        </ul>
+        
+        <h2 className="text-xl font-semibold mt-8 mb-2">{t('about.tech.title')}</h2>
+        <p>{t('about.tech.intro')}</p>
+        <ul>
+          <li><strong>{t('about.tech.frontend.title')}</strong>：{t('about.tech.frontend.desc')}</li>
+          <li><strong>{t('about.tech.backend.title')}</strong>：{t('about.tech.backend.desc')}</li>
+          <li><strong>{t('about.tech.email.title')}</strong>：{t('about.tech.email.desc')}</li>
+          <li><strong>{t('about.tech.storage.title')}</strong>：{t('about.tech.storage.desc')}</li>
+        </ul>
+        
+        <h2 className="text-xl font-semibold mt-8 mb-2">{t('about.opensource.title')}</h2>
+        <p>{t('about.opensource.intro')}</p>
+        <ul>
+          <li><strong>{t('about.opensource.github.title')}</strong>：<a href="https://github.com/zaunist/zmail" className="text-blue-600 hover:underline">https://github.com/zaunist/zmail</a></li>
+          <li><strong>{t('about.opensource.license.title')}</strong>：{t('about.opensource.license.desc')}</li>
+          <li><strong>{t('about.opensource.contribute.title')}</strong>：{t('about.opensource.contribute.desc')}</li>
+        </ul>
+        
+        <h2 className="text-xl font-semibold mt-8 mb-2">{t('about.contact.title')}</h2>
+        <p>{t('about.contact.intro')}</p>
+        <ul>
+          <li><strong>{t('about.contact.github.title')}</strong>：{t('about.contact.github.desc')}</li>
+          <li><strong>{t('about.contact.email.title')}</strong>：y.bz@foxmail.com</li>
+        </ul>
+        
+        <p className="text-center mt-10">{t('about.conclusion')}</p>
       </div>
     </Container>
   );

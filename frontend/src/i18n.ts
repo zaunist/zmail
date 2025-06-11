@@ -22,7 +22,7 @@ i18n
         translation: en,
       },
     },
-    fallbackLng: 'zh-CN',
+    fallbackLng: 'en',
     debug: import.meta.env.MODE === 'development',
     interpolation: {
       escapeValue: false, // 不转义HTML
@@ -33,4 +33,4 @@ i18n
     },
   });
 
-export default i18n; 
+export default i18n;
