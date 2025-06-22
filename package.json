@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "build": "pnpm --filter frontend run build",
-    "dev": "wrangler dev",
+    "dev:frontend": "pnpm --filter frontend run dev",
+    "dev:backend": "wrangler dev",
+    "build:frontend": "pnpm --filter frontend run build",
+    "build:backend": "wrangler deploy --dry-run --outdir dist",
     "deploy": "wrangler deploy"
   },
   "keywords": [],

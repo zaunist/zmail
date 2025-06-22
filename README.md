@@ -6,9 +6,9 @@
   </p>
 
   <p>如果这个项目对您有帮助，请考虑给它一个 ⭐️ Star ⭐️，这将是对我最大的鼓励！</p>
-  
+
   <img src="frontend/public/favicon.svg" alt="ZMAIL Logo" width="120" height="120" style="background-color: #4f46e5; padding: 20px; border-radius: 12px; margin: 20px 0;">
-  
+
   <h3>💌 安全、简单、即用即走的临时邮箱服务</h3>
 
   <p>
@@ -18,7 +18,7 @@
     <a href="#本地开发"><strong>💻 本地开发</strong></a> •
     <a href="#技术栈"><strong>🔧 技术栈</strong></a>
   </p>
-  
+
   <div style="display: flex; gap: 10px; justify-content: center; margin: 25px 0;">
     <a href="https://dash.cloudflare.com/" target="_blank">
       <img src="https://img.shields.io/badge/Cloudflare-F38020?style=for-the-badge&logo=cloudflare&logoColor=white" alt="Cloudflare" />
@@ -83,111 +83,75 @@
 
 ## 🚀 快速部署
 
-ZMAIL 由前端和后端两部分组成，需要先部署后端，然后再部署前端：
+ZMAIL 由前端和后端两部分组成，支持快速部署到 Cloudflare Workers
 
-### ⚙️ 后端部署步骤
+### ⚙️ 部署步骤
 
 <div align="center">
-  <h3>2️⃣ 部署后端到 Cloudflare Workers</h3>
-  <a href="https://dash.cloudflare.com/?to=/:account/workers/new" target="_blank">
-    <img src="https://img.shields.io/badge/部署后端到_Cloudflare_Workers-F38020?style=for-the-badge&logo=cloudflare&logoColor=white" alt="Deploy Backend to Cloudflare Workers" width="300" />
+  <h3>部署到 Cloudflare Workers</h3>
+  <a href="http://deploy.workers.cloudflare.com/?url=https://github.com/zaunist/zmail" target="_blank">
+    <img src="https://deploy.workers.cloudflare.com/button" alt="Deploy to Cloudflare" />
   </a>
 </div>
 
 <div style="background-color: #2d2d2d; color: #ffffff; padding: 15px; border-radius: 5px; margin: 15px 0;">
   <ol>
-    <li>点击"部署后端到 Cloudflare Workers"按钮</li>
-    <li>连接您的GitHub账户并选择导入此仓库</li>
-    <li>设置构建配置:
+    <li>点击 "Deploy to Cloudflare" 按钮</li>
+    <li>按照页面提示
       <ul>
-        <li>部署命令: <code>yarn deploy</code></li>
-        <li>高级设置 -> 根目录: <code>/worker</code></li>
+        <li>连接您的 GitHub 账户</li>
+        <li>填写一个应用名称</li>
+        <li>填写数据库名称</li>
       </ul>
     </li>
-    <li>配置D1数据库:
-      <ul>
-        <li>创建一个D1数据库 (例如: <code>mail_db</code>)</li>
-        <li>将其绑定到您的Worker (绑定名称: <code>DB</code>)</li>
+    <li>高级设置 -> 构建变量
+    <ul>
+        <li><code>VITE_API_BASE_URL</code>: 您的 Worker API 基础 URL (例如: https://api.mdzz.uk)</li>
+        <li><code>VITE_EMAIL_DOMAIN</code>: 您的域名列表，使用 ',' 分割 (例如: mdzz.uk,zaunist.com)</li>
       </ul>
     </li>
-    <li>配置Email路由:
-      <ul>
-        <li>在Cloudflare控制面板中设置Email路由，将邮件转发到您的Worker</li>
-        <li>如果你想配置多个域名邮箱，那么就在CloudFlare后台将每一个域名都设置邮件转发到上述 worker 中</li>
-      </ul>
+    <li>点击"创建和部署"</li>
+    <li>配置 Cloudflare Email 路由
+    <ul>
+        <li>在 Cloudflare 控制面板中设置 Email 路由，将邮件转发到您的 Worker</li>
+        <li>如果你想配置多个域名邮箱，那么就在 CloudFlare 后台将每一个域名都设置邮件转发到上述 worker 中</li>
+    </ul>
     </li>
-    <li>点击"部署"</li>
   </ol>
 </div>
 
 ---
 
-### 🖥️ 前端部署步骤
-
-<div align="center">
-  <h3>1️⃣ 部署前端到 Cloudflare Pages</h3>
-  <a href="https://dash.cloudflare.com/?to=/:account/pages/new/import-git" target="_blank">
-    <img src="https://img.shields.io/badge/部署前端到_Cloudflare_Pages-F38020?style=for-the-badge&logo=cloudflare&logoColor=white" alt="Deploy Frontend to Cloudflare Pages" width="300" />
-  </a>
-</div>
-
-<div style="background-color: #2d2d2d; color: #ffffff; padding: 15px; border-radius: 5px; margin: 15px 0;">
-  <ol>
-    <li>点击"部署前端到 Cloudflare Pages"按钮</li>
-    <li>连接您的GitHub账户并选择导入此仓库</li>
-    <li>设置构建配置:
-      <ul>
-        <li>构建命令: <code>yarn build</code></li>
-        <li>构建输出目录: <code>dist</code></li>
-        <li>根目录（高级）-> 路径: <code>frontend</code></li>
-      </ul>
-    </li>
-    <li>配置环境变量:
-      <ul>
-        <li><code>VITE_API_BASE_URL</code>: 您的Worker API基础URL (例如: <code>https://api.mdzz.uk</code>)</li>
-         <li><code>VITE_EMAIL_DOMAIN</code>: 您的域名列表，使用','分割 (例如: <code>mdzz.uk,zaunist.com</code>)</li>
-      </ul>
-    </li>
-    <li>点击"保存并部署"</li>
-  </ol>
-</div>
-
 
 ## 💻 本地开发
 
-### 🎨 前端开发
+### 🚀 开发
 
 <div style="background-color: #2d2d2d; color: #ffffff; padding: 15px; border-radius: 5px; margin: 15px 0;">
 
 ```bash
-# 进入前端目录
-cd frontend
-
 # 安装依赖
-yarn install
+pnpm install
 
-# 启动开发服务器
-yarn dev
+# 启动前端开发服务器
+pnpm dev:frontend
+
+# 启动后端开发服务器
+pnpm dev:backend
 ```
 
 </div>
 
-### ⚙️ Worker开发
+### ⚙️ 部署
 
 <div style="background-color: #2d2d2d; color: #ffffff; padding: 15px; border-radius: 5px; margin: 15px 0;">
 
 ```bash
-# 进入worker目录
-cd worker
+# 前端构建
+pnpm build:frontend
 
-# 安装依赖
-yarn install
-
-# 构建预览
-yarn build
-
-# 部署到 cloudflare
-yarn deploy
+# 部署
+pnpm run deploy
 ```
 
 </div>
@@ -227,11 +191,11 @@ yarn deploy
 <div align="center">
   <p>如果您觉得这个项目对您有所帮助，或者您喜欢这个项目，请给它一个 Star ⭐️</p>
   <p>您的支持是我持续改进的动力！</p>
-  
+
   <a href="https://github.com/zaunist/zmail">
     <img src="https://img.shields.io/github/stars/zaunist/zmail?style=social" alt="GitHub stars" />
   </a>
-  
+
   <p style="margin-top: 15px;">
     <a href="https://buymeacoke.realyourdad.workers.dev/" target="_blank">
       <img src="https://img.shields.io/badge/Buy_Me_A_Coke-FF5E5B?style=for-the-badge&logo=coca-cola&logoColor=white" alt="Buy Me A Coke" width="200" style="border-radius: 8px;" height="51" />
