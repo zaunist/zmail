@@ -146,9 +146,6 @@ pnpm dev:backend
 <div style="background-color: #2d2d2d; color: #ffffff; padding: 15px; border-radius: 5px; margin: 15px 0;">
 
 ```bash
-# frontend build
-pnpm build:frontend
-
 # deploy
 pnpm run deploy
 ```

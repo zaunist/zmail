@@ -5,8 +5,7 @@
   "scripts": {
     "dev:frontend": "pnpm --filter frontend run dev",
     "dev:backend": "wrangler dev",
-    "build:frontend": "pnpm --filter frontend run build",
-    "build:backend": "wrangler deploy --dry-run --outdir dist",
+    "build": "pnpm --filter frontend run build",
     "deploy": "wrangler deploy"
   },
   "keywords": [],
