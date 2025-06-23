@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from './LanguageSwitcher';
 import HeaderMailbox from './HeaderMailbox';
 import Container from './Container';
-import { EMAIL_DOMAINS, DEFAULT_EMAIL_DOMAIN } from '../config';
+import { getEmailDomains, getDefaultEmailDomain, EMAIL_DOMAINS, DEFAULT_EMAIL_DOMAIN } from '../config';
 
 interface HeaderProps {
   mailbox: Mailbox | null;
@@ -18,6 +18,25 @@ const Header: React.FC<HeaderProps> = ({
   isLoading = false 
 }) => {
   const { t } = useTranslation();
+  const [emailDomains, setEmailDomains] = useState<string[]>(EMAIL_DOMAINS);
+  const [defaultDomain, setDefaultDomain] = useState<string>(DEFAULT_EMAIL_DOMAIN);
+  
+  // 异步获取邮箱域名配置
+  useEffect(() => {
+    const loadConfig = async () => {
+      try {
+        const domains = await getEmailDomains();
+        const defaultDom = await getDefaultEmailDomain();
+        setEmailDomains(domains);
+        setDefaultDomain(defaultDom);
+      } catch (error) {
+        console.error('加载邮箱域名配置失败:', error);
+        // 保持使用默认值
+      }
+    };
+    
+    loadConfig();
+  }, []);
   
   return (
     <header className="border-b">
@@ -32,8 +51,8 @@ const Header: React.FC<HeaderProps> = ({
               <HeaderMailbox 
                 mailbox={mailbox} 
                 onMailboxChange={onMailboxChange}
-                domain={DEFAULT_EMAIL_DOMAIN}
-                domains={EMAIL_DOMAINS}
+                domain={defaultDomain}
+                domains={emailDomains}
                 isLoading={isLoading}
               />
               <div className="ml-3 pl-3 border-l border-muted-foreground/20 flex items-center">
@@ -57,4 +76,4 @@ const Header: React.FC<HeaderProps> = ({
   );
 };
 
-export default Header; 
+export default Header;

@@ -3,6 +3,7 @@ import { D1Database } from '@cloudflare/workers-types';
 // 环境变量类型
 export interface Env {
   DB: D1Database;
+  VITE_EMAIL_DOMAIN?: string;
 }
 
 // 邮箱类型
@@ -105,7 +106,7 @@ export interface SaveAttachmentParams {
 }
 
 // API 响应类型
-export interface ApiResponse<T> {
+export interface ApiResponse {
   success: boolean;
   error?: string;
   message?: string;

@@ -29,6 +29,28 @@ app.get('/', (c) => {
   return c.json({ status: 'ok', message: '临时邮箱系统API正常运行' });
 });
 
+// 获取系统配置
+app.get('/api/config', (c) => {
+  try {
+    const emailDomains = c.env.VITE_EMAIL_DOMAIN || '';
+    const domains = emailDomains.split(',').map((domain: string) => domain.trim()).filter((domain: string) => domain);
+    
+    return c.json({ 
+      success: true, 
+      config: {
+        emailDomains: domains
+      }
+    });
+  } catch (error) {
+    console.error('获取配置失败:', error);
+    return c.json({ 
+      success: false, 
+      error: '获取配置失败',
+      message: error instanceof Error ? error.message : String(error)
+    }, 500);
+  }
+});
+
 
 // 创建邮箱
 app.post('/api/mailboxes', async (c) => {
