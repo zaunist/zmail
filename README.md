@@ -19,34 +19,25 @@
     <a href="#技术栈"><strong>🔧 技术栈</strong></a>
   </p>
 
-  <div style="display: flex; gap: 10px; justify-content: center; margin: 25px 0;">
-    <a href="https://dash.cloudflare.com/" target="_blank">
-      <img src="https://img.shields.io/badge/Cloudflare-F38020?style=for-the-badge&logo=cloudflare&logoColor=white" alt="Cloudflare" />
-    </a>
-  </div>
 </div>
 
 ---
 
 ## 📹 视频教程
 
+1. **项目介绍与功能演示**
+2. **一体化 Worker 部署到 Cloudflare 的详细步骤**
+3. **Fork 项目并自定义配置的方法**
+4. **配置 Cloudflare Email 路由**
+5. **设置环境变量与 D1 数据库**
+
 <div align="center">
   <a href="https://youtu.be/domoWldyXrc?si=9l3JN5AbtiaTS3_L" target="_blank">
-    <img src="https://img.shields.io/badge/观看_YouTube_视频教程-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="YouTube 视频教程" width="250" />
+    <img src="https://img.shields.io/badge/观看_YouTube_视频教程-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="YouTube 视频教程" />
   </a>
 </div>
 
-<div style="background-color: #2d2d2d; color: #ffffff; padding: 15px; border-radius: 5px; margin: 15px 0;">
-  <p>📺 完整视频教程包含以下内容：</p>
-  <ol>
-    <li>项目介绍与功能演示</li>
-    <li>前端部署到 Cloudflare Pages 的详细步骤</li>
-    <li>后端部署到 Cloudflare Workers 的详细步骤</li>
-    <li>配置 Cloudflare Email 路由</li>
-    <li>设置环境变量与数据库</li>
-  </ol>
-  <p>👉 <a href="https://youtu.be/domoWldyXrc?si=9l3JN5AbtiaTS3_L" target="_blank" style="color: #4f46e5;">点击此处观看完整视频教程</a></p>
-</div>
+> **💡 提示：** 视频教程可能基于旧版本录制，最新部署方式请参考下方文档说明。
 
 ---
 
@@ -83,39 +74,105 @@
 
 ## 🚀 快速部署
 
-ZMAIL 由前端和后端两部分组成，支持快速部署到 Cloudflare Workers
+ZMAIL 现在采用全新的一体化部署方式，前端和后端整合为一个 Cloudflare Worker，部署更加简单！
 
-### ⚙️ 部署步骤
+### 🎯 部署方式选择
+
+我们提供两种部署方式，您可以根据需求选择：
+
+#### 方式一：一键部署（推荐新手）
 
 <div align="center">
-  <h3>部署到 Cloudflare Workers</h3>
   <a href="http://deploy.workers.cloudflare.com/?url=https://github.com/zaunist/zmail" target="_blank">
     <img src="https://deploy.workers.cloudflare.com/button" alt="Deploy to Cloudflare" />
   </a>
 </div>
 
 <div style="background-color: #2d2d2d; color: #ffffff; padding: 15px; border-radius: 5px; margin: 15px 0;">
+  <h4>✅ 优点：</h4>
+  <ul>
+    <li>部署简单，一键完成</li>
+    <li>无需修改配置文件</li>
+    <li>适合快速体验</li>
+  </ul>
+  
+  <h4>❌ 缺点：</h4>
+  <ul>
+    <li>无法获得后续代码更新</li>
+    <li>需要手动绑定自定义域名</li>
+  </ul>
+  
+  <h4>📋 部署步骤：</h4>
   <ol>
-    <li>点击 "Deploy to Cloudflare" 按钮</li>
-    <li>按照页面提示
+    <li>点击上方 "Deploy to Cloudflare" 按钮</li>
+    <li>按照页面提示连接您的 GitHub 账户</li>
+    <li>填写应用名称和数据库名称</li>
+    <li>在高级设置 -> 构建变量中设置：
       <ul>
-        <li>连接您的 GitHub 账户</li>
-        <li>填写一个应用名称</li>
-        <li>填写数据库名称</li>
-      </ul>
-    </li>
-    <li>高级设置 -> 构建变量
-    <ul>
         <li><code>VITE_EMAIL_DOMAIN</code>: 您的域名列表，使用 ',' 分割 (例如: mdzz.uk,zaunist.com)</li>
       </ul>
     </li>
     <li>点击"创建和部署"</li>
-    <li>配置 Cloudflare Email 路由
-    <ul>
-        <li>在 Cloudflare 控制面板中设置 Email 路由，将邮件转发到您的 Worker</li>
-        <li>如果你想配置多个域名邮箱，那么就在 CloudFlare 后台将每一个域名都设置邮件转发到上述 worker 中</li>
-    </ul>
+    <li>部署完成后，在 Cloudflare Workers 控制面板中绑定自定义域名</li>
+    <li>配置 Cloudflare Email 路由，将邮件转发到您的 Worker</li>
+  </ol>
+</div>
+
+#### 方式二：Fork 后自定义部署（推荐进阶用户）
+
+<div style="background-color: #2d2d2d; color: #ffffff; padding: 15px; border-radius: 5px; margin: 15px 0;">
+  <h4>✅ 优点：</h4>
+  <ul>
+    <li>可以获得后续代码更新</li>
+    <li>完全自定义配置</li>
+    <li>更好的版本控制</li>
+  </ul>
+  
+  <h4>❌ 缺点：</h4>
+  <ul>
+    <li>需要手动修改配置文件</li>
+    <li>需要一定的技术基础</li>
+    <li>需要手动创建数据库</li>
+  </ul>
+  
+  <h4>📋 部署步骤：</h4>
+  <ol>
+    <li>Fork 本项目到您的 GitHub 账户</li>
+    <li>在 Cloudflare Dashboard 中创建一个 D1 数据库，记住数据库的 name 和 id</li>
+    <li>修改根目录下的 <code>wrangler.toml</code> 文件：
+      <ul>
+        <li>修改 <code>name</code> 为您的应用名称。（可选）</li>
+        <li>修改 <code>routes</code> 中的自定义域名。（必须！默认的worker.dev域名在中国大陆无法访问）</li>
+        <li>修改 <code>database_name</code> 和 <code>database_id</code> 为您的 D1 数据库信息。（必须！）</li>
+        <li>修改 <code>VITE_EMAIL_DOMAIN</code> 为您的域名列表。（可选，只是方便网页上复制粘贴邮件地址使用，不设置也不影响接收邮件）</li>
+      </ul>
     </li>
+    <li>在 Cloudflare Dashboard 中选择 "Workers & Pages"</li>
+    <li>点击 "Create application" -> "Pages" -> "Connect to Git"</li>
+    <li>选择您 Fork 的仓库</li>
+    <li>配置构建设置（通常会自动检测）</li>
+    <li>点击 "Save and Deploy"</li>
+    <li>配置 Cloudflare Email 路由，将邮件转发到您的 Worker</li>
+  </ol>
+</div>
+
+### 📧 配置邮件路由
+
+无论选择哪种部署方式，都需要配置 Cloudflare Email 路由：
+
+<div style="background-color: #2d2d2d; color: #ffffff; padding: 15px; border-radius: 5px; margin: 15px 0;">
+  <ol>
+    <li>在 Cloudflare 控制面板中找到您的域名</li>
+    <li>进入 "Email" -> "Email Routing"</li>
+    <li>启用 Email Routing</li>
+    <li>添加路由规则：
+      <ul>
+        <li>匹配类型："Catch-all address"</li>
+        <li>操作："Send to a Worker"</li>
+        <li>选择您部署的 Worker</li>
+      </ul>
+    </li>
+    <li>如果有多个域名，请为每个域名重复上述步骤</li>
   </ol>
 </div>
 
