@@ -1,12 +1,9 @@
 {
-  "name": "temp-mail-worker",
+  "name": "@zmail/worker",
   "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "wrangler deploy --dry-run --outdir dist",
-    "dev": "wrangler dev",
-    "deploy": "wrangler deploy",
     "check": "tsc --noEmit"
   },
   "dependencies": {
@@ -16,8 +13,6 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250303.0",
-    "typescript": "^5.8.2",
-    "wrangler": "^4.13.2"
-  },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+    "typescript": "^5.8.2"
+  }
 }

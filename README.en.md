@@ -6,9 +6,9 @@
   </p>
 
   <p>If you find this project helpful, please consider giving it a ⭐️ Star ⭐️. Your support is greatly appreciated!</p>
-  
+
   <img src="frontend/public/favicon.svg" alt="ZMAIL Logo" width="120" height="120" style="background-color: #4f46e5; padding: 20px; border-radius: 12px; margin: 20px 0;">
-  
+
   <h3>💌 Secure, Simple, Disposable Email Service</h3>
 
   <p>
@@ -18,7 +18,7 @@
     <a href="#local-development"><strong>💻 Development</strong></a> •
     <a href="#tech-stack"><strong>🔧 Tech Stack</strong></a>
   </p>
-  
+
   <div style="display: flex; gap: 10px; justify-content: center; margin: 25px 0;">
     <a href="https://dash.cloudflare.com/" target="_blank">
       <img src="https://img.shields.io/badge/Cloudflare-F38020?style=for-the-badge&logo=cloudflare&logoColor=white" alt="Cloudflare" />
@@ -85,70 +85,38 @@
 
 ZMAIL consists of two parts that need to be deployed separately, deploy the backend first, then the frontend:
 
-### ⚙️ Backend Deployment
+### ⚙️ Deployment Steps
 
 <div align="center">
-  <h3>2️⃣ Deploy Backend to Cloudflare Workers</h3>
-  <a href="https://dash.cloudflare.com/?to=/:account/workers/new" target="_blank">
-    <img src="https://img.shields.io/badge/Deploy_to_Cloudflare_Workers-F38020?style=for-the-badge&logo=cloudflare&logoColor=white" alt="Deploy Backend to Cloudflare Workers" width="300" />
+  <h3>Deploy to Cloudflare Workers</h3>
+  <a href="http://deploy.workers.cloudflare.com/?url=https://github.com/zaunist/zmail" target="_blank">
+    <img src="https://deploy.workers.cloudflare.com/button" alt="Deploy to Cloudflare" />
   </a>
 </div>
 
 <div style="background-color: #2d2d2d; color: #ffffff; padding: 15px; border-radius: 5px; margin: 15px 0;">
   <ol>
-    <li>Click the "Deploy to Cloudflare Workers" button</li>
-    <li>Connect your GitHub account and select this repository</li>
-    <li>Configure build settings:
+    <li>Click "Deploy to Cloudflare" button</li>
+    <li>Follow the instructions on the page
       <ul>
-        <li>Deploy command: <code>yarn deploy</code></li>
-        <li>Advanced settings -> Root directory: <code>/worker</code></li>
+        <li>Connect your GitHub account</li>
+        <li>Enter an application name</li>
+        <li>Enter a database name
       </ul>
     </li>
-    <li>Configure D1 database:
-      <ul>
-        <li>Create a D1 database (e.g., <code>mail_db</code>)</li>
-        <li>Bind it to your Worker (binding name: <code>DB</code>)</li>
+    <li>Advanced settings -> Build variables
+    <ul>
+        <li><code>VITE_API_BASE_URL</code>: Your Worker API base URL (e.g., <code>https://api.mdzz.uk</code>)</li>
+        <li><code>VITE_EMAIL_DOMAIN</code>: Your domain list, separated by ',' (e.g., <code>mdzz.uk,zaunist.com</code>)</li>
       </ul>
     </li>
-    <li>Configure Email routing:
-      <ul>
+    <li>Click "Create and Deploy"</li>
+    <li>Configure Cloudflare Email routing
+    <ul>
         <li>Set up Email routing in the Cloudflare dashboard to forward emails to your Worker</li>
         <li>If you want to configure multiple domain emails, set up email forwarding for each domain to the worker in the CloudFlare dashboard</li>
-      </ul>
+    </ul>
     </li>
-    <li>Click "Deploy"</li>
-  </ol>
-</div>
-
----
-
-### 🖥️ Frontend Deployment
-
-<div align="center">
-  <h3>1️⃣ Deploy Frontend to Cloudflare Pages</h3>
-  <a href="https://dash.cloudflare.com/?to=/:account/pages/new/import-git" target="_blank">
-    <img src="https://img.shields.io/badge/Deploy_to_Cloudflare_Pages-F38020?style=for-the-badge&logo=cloudflare&logoColor=white" alt="Deploy Frontend to Cloudflare Pages" width="300" />
-  </a>
-</div>
-
-<div style="background-color: #2d2d2d; color: #ffffff; padding: 15px; border-radius: 5px; margin: 15px 0;">
-  <ol>
-    <li>Click the "Deploy to Cloudflare Pages" button</li>
-    <li>Connect your GitHub account and select this repository</li>
-    <li>Configure build settings:
-      <ul>
-        <li>Build command: <code>yarn build</code></li>
-        <li>Build output directory: <code>dist</code></li>
-        <li>Root directory (Advanced) -> Path: <code>frontend</code></li>
-      </ul>
-    </li>
-    <li>Configure environment variables:
-      <ul>
-        <li><code>VITE_API_BASE_URL</code>: Your Worker API base URL (e.g., <code>https://api.mdzz.uk</code>)</li>
-         <li><code>VITE_EMAIL_DOMAIN</code>: Your domain list, separated by ',' (e.g., <code>mdzz.uk,zaunist.com</code>)</li>
-      </ul>
-    </li>
-    <li>Click "Save and Deploy"</li>
   </ol>
 </div>
 
@@ -156,39 +124,30 @@ ZMAIL consists of two parts that need to be deployed separately, deploy the back
 
 ## 💻 Local Development
 
-### 🎨 Frontend Development
+### 🚀 Development
 
 <div style="background-color: #2d2d2d; color: #ffffff; padding: 15px; border-radius: 5px; margin: 15px 0;">
 
 ```bash
-# Navigate to frontend directory
-cd frontend
+# install dependencies
+pnpm install
 
-# Install dependencies
-yarn install
+# start frontend development server
+pnpm dev:frontend
 
-# Start development server
-yarn dev
+# start backend development server
+pnpm dev:backend
 ```
 
 </div>
 
-### ⚙️ Worker Development
+### ⚙️ Deployment
 
 <div style="background-color: #2d2d2d; color: #ffffff; padding: 15px; border-radius: 5px; margin: 15px 0;">
 
 ```bash
-# Navigate to worker directory
-cd worker
-
-# Install dependencies
-yarn install
-
-# Build preview
-yarn build
-
-# Deploy to Cloudflare
-yarn deploy
+# deploy
+pnpm run deploy
 ```
 
 </div>
@@ -228,7 +187,7 @@ Contributions via Pull Requests or Issues are welcome!
 <div align="center">
   <p>If this project has been helpful to you, or if you like it, please give it a Star ⭐️</p>
   <p>Your support motivates me to make continuous improvements!</p>
-  
+
   <a href="https://github.com/zaunist/zmail">
     <img src="https://img.shields.io/github/stars/zaunist/zmail?style=social" alt="GitHub stars" />
   </a>
@@ -236,4 +195,4 @@ Contributions via Pull Requests or Issues are welcome!
 
 ## 📄 License
 
-[MIT License](./LICENSE) 
+[MIT License](./LICENSE)

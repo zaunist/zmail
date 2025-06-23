@@ -1,0 +1,17 @@
+{
+  "name": "zmail",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev:frontend": "pnpm --filter frontend run dev",
+    "dev:backend": "wrangler dev",
+    "build": "pnpm --filter frontend run build",
+    "deploy": "wrangler deploy"
+  },
+  "keywords": [],
+  "author": "",
+  "packageManager": "pnpm@10.12.1",
+  "devDependencies": {
+    "wrangler": "^4.20.5"
+  }
+}
