@@ -106,7 +106,6 @@ ZMAIL 由前端和后端两部分组成，支持快速部署到 Cloudflare Worke
     </li>
     <li>高级设置 -> 构建变量
     <ul>
-        <li><code>VITE_API_BASE_URL</code>: 您的 Worker API 基础 URL (例如: https://api.mdzz.uk)</li>
         <li><code>VITE_EMAIL_DOMAIN</code>: 您的域名列表，使用 ',' 分割 (例如: mdzz.uk,zaunist.com)</li>
       </ul>
     </li>
