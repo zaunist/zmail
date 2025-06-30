@@ -37,12 +37,10 @@
 5. **Setting up Environment Variables and D1 Database**
 
 <div align="center">
-  <a href="https://youtu.be/domoWldyXrc?si=9l3JN5AbtiaTS3_L" target="_blank">
+  <a href="https://youtu.be/EHXijzlveqk" target="_blank">
     <img src="https://img.shields.io/badge/Watch_YouTube_Tutorial-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="YouTube Tutorial" />
   </a>
 </div>
-
-> **💡 Note:** Video tutorials may be based on older versions. Please refer to the documentation below for the latest deployment methods.
 
 ---
 

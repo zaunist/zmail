@@ -32,12 +32,10 @@
 5. **设置环境变量与 D1 数据库**
 
 <div align="center">
-  <a href="https://youtu.be/domoWldyXrc?si=9l3JN5AbtiaTS3_L" target="_blank">
+  <a href="https://youtu.be/EHXijzlveqk" target="_blank">
     <img src="https://img.shields.io/badge/观看_YouTube_视频教程-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="YouTube 视频教程" />
   </a>
 </div>
-
-> **💡 提示：** 视频教程可能基于旧版本录制，最新部署方式请参考下方文档说明。
 
 ---
 
