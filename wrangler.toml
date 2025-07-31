@@ -8,18 +8,18 @@ compatibility_date = "2025-03-01"
 
 # 设置自定义域名
 routes = [
-  { pattern = "mail.mdzz.uk", custom_domain = true }
+  { pattern = "mail.yiqidaxiaohei.top", custom_domain = true }
 ]
 
 # 启用 D1 数据库
 [[d1_databases]]
 binding = "DB"
-database_name = "zmail"  # 替换为您的实际的数据库 NAME
-database_id = "d77b6f63-43ad-46a9-8a49-d4a2706be53e"  # 需要替换为您的实际数据库 ID
+database_name = "jianfengmail"  # 替换为您的实际的数据库 NAME
+database_id = "4c4c476f-3f4b-4f29-b898-a3a00b1c2cd6"  # 需要替换为您的实际数据库 ID
 
 # 设置域名
 [vars]
-VITE_EMAIL_DOMAIN = "mdzz.uk,zaunist.com"   # 替换为您的域名列表，多个域名使用逗号 , 分割。这里的域名只是用来网页上展示，方便复制粘贴使用。
+VITE_EMAIL_DOMAIN = "yiqidaxiaohei.top"   # 替换为您的域名列表，多个域名使用逗号 , 分割。这里的域名只是用来网页上展示，方便复制粘贴使用。
 
 # 配置邮件处理
 [triggers]
