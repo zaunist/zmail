@@ -237,22 +237,10 @@ pnpm run deploy
 
 欢迎提交Pull Request或Issue来改进这个项目！
 
-## ⭐ 支持项目
+## ⭐ 支持一下作者
 
-<div align="center">
-  <p>如果您觉得这个项目对您有所帮助，或者您喜欢这个项目，请给它一个 Star ⭐️</p>
-  <p>您的支持是我持续改进的动力！</p>
-
-  <a href="https://github.com/zaunist/zmail">
-    <img src="https://img.shields.io/github/stars/zaunist/zmail?style=social" alt="GitHub stars" />
-  </a>
-
-  <p style="margin-top: 15px;">
-    <a href="https://buymeacoke.realyourdad.workers.dev/" target="_blank">
-      <img src="https://img.shields.io/badge/Buy_Me_A_Coke-FF5E5B?style=for-the-badge&logo=coca-cola&logoColor=white" alt="Buy Me A Coke" width="200" style="border-radius: 8px;" height="51" />
-    </a>
-  </p>
-</div>
+- Youtube 频道：[阿杰鲁](https://www.youtube.com/@zaunist)
+    - 帮忙点点关注点点赞，球球你了，你要是不点，我下次还求🙏
 
 ## 📄 许可证
 
