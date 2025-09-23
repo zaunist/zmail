@@ -5,11 +5,7 @@ main = "worker/src/index.ts"
 minify = true # 生产环境压缩代码
 compatibility_flags = [ "nodejs_compat" ]
 compatibility_date = "2025-03-01"
-
-# 设置自定义域名
-routes = [
-  { pattern = "mail.mdzz.uk", custom_domain = true }
-]
+keep_vars = true
 
 # 启用 D1 数据库
 [[d1_databases]]
