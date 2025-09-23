@@ -31,11 +31,14 @@
 4. **配置 Cloudflare Email 路由**
 5. **设置环境变量与 D1 数据库**
 
-<div align="center">
-  <a href="https://youtu.be/EHXijzlveqk" target="_blank">
-    <img src="https://img.shields.io/badge/观看_YouTube_视频教程-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="YouTube 视频教程" />
-  </a>
-</div>
+Youtube 视频地址： https://youtu.be/XR5TV4C3D5E
+
+---
+
+## ⭐ 支持一下作者
+
+- Youtube 频道：[阿杰鲁](https://www.youtube.com/@zaunist)
+    - 帮忙点点关注点点赞，球球你了，你要是不点，我下次还求🙏
 
 ---
 
@@ -236,11 +239,6 @@ pnpm run deploy
 ## 👥 贡献指南
 
 欢迎提交Pull Request或Issue来改进这个项目！
-
-## ⭐ 支持一下作者
-
-- Youtube 频道：[阿杰鲁](https://www.youtube.com/@zaunist)
-    - 帮忙点点关注点点赞，球球你了，你要是不点，我下次还求🙏
 
 ## 📄 许可证
 
