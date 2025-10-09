@@ -121,7 +121,7 @@ We provide two deployment methods, you can choose according to your needs:
   </ol>
 </div>
 
-#### Option 2: Fork and Custom Deployment (Recommended for Advanced Users)
+#### Option 2: Fork and Custom Deployment via Github Action (Recommended for Advanced Users)
 
 <div style="background-color: #2d2d2d; color: #ffffff; padding: 15px; border-radius: 5px; margin: 15px 0;">
   <h4>✅ Advantages:</h4>
@@ -129,33 +129,32 @@ We provide two deployment methods, you can choose according to your needs:
     <li>Can receive subsequent code updates</li>
     <li>Fully customizable configuration</li>
     <li>Better version control</li>
+    <li>Automatic deployment via GitHub Actions, more secure and convenient</li>
   </ul>
   
   <h4>❌ Disadvantages:</h4>
   <ul>
-    <li>Need to manually modify configuration files</li>
     <li>Requires some technical knowledge</li>
-    <li>Need to manually create database</li>
+    <li>Need to manually create database and configure secrets</li>
   </ul>
   
   <h4>📋 Deployment Steps:</h4>
   <ol>
     <li>Fork this project to your GitHub account</li>
-    <li>Create a D1 database in Cloudflare Dashboard, remember the database name and id</li>
-    <li>Modify the <code>wrangler.toml</code> file in the root directory:
+    <li>Create a D1 database in your Cloudflare Dashboard and note down the <strong>database_name</strong> and <strong>database_id</strong></li>
+    <li>In your GitHub repository, go to <strong>Settings</strong> > <strong>Secrets and variables</strong> > <strong>Actions</strong></li>
+    <li>Click <strong>New repository secret</strong> and add the following five secrets:
       <ul>
-        <li>Modify <code>name</code> to your application name (optional)</li>
-        <li>Modify <code>routes</code> with your custom domain (required! Default worker.dev domain is not accessible in mainland China)</li>
-        <li>Modify <code>database_name</code> and <code>database_id</code> to your D1 database information (required!)</li>
-        <li>Modify <code>VITE_EMAIL_DOMAIN</code> to your domain list (optional, just for convenient copy-paste of email addresses on the webpage, doesn't affect email reception)</li>
+        <li><code>CF_API_TOKEN</code>: Your Cloudflare API Token. You can create one <a href="https://dash.cloudflare.com/profile/api-tokens" target="_blank">here</a> using the "Edit Cloudflare Workers" template.</li>
+        <li><code>CF_ACCOUNT_ID</code>: Your Cloudflare Account ID. You can find it on the right side of the Workers page.</li>
+        <li><code>D1_DATABASE_ID</code>: The ID of the D1 database you created in step 2.</li>
+        <li><code>D1_DATABASE_NAME</code>: The name of the D1 database you created in step 2.</li>
+        <li><code>VITE_EMAIL_DOMAIN</code>: Your list of domains, separated by commas (e.g., example.com,test.com).</li>
       </ul>
     </li>
-    <li>In Cloudflare Dashboard, select "Workers & Pages"</li>
-    <li>Click "Create application" -> "Pages" -> "Connect to Git"</li>
-    <li>Select your forked repository</li>
-    <li>Configure build settings (usually auto-detected)</li>
-    <li>Click "Save and Deploy"</li>
-    <li>Configure Cloudflare Email routing to forward emails to your Worker</li>
+    <li>After completing the steps above, the project will be automatically deployed on every push to the <code>main</code> branch. You can also trigger the deployment manually from the Actions page.</li>
+    <li>After deployment, bind a custom domain to your Worker.</li>
+    <li>Finally, configure Cloudflare Email Routing to forward emails to your Worker.</li>
   </ol>
 </div>
 

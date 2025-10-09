@@ -119,7 +119,7 @@ ZMAIL 现在采用全新的一体化部署方式，前端和后端整合为一�
   </ol>
 </div>
 
-#### 方式二：Fork 后自定义部署（推荐进阶用户）
+#### 方式二：Fork 后通过 Github Action 自定义部署（推荐进阶用户）
 
 <div style="background-color: #2d2d2d; color: #ffffff; padding: 15px; border-radius: 5px; margin: 15px 0;">
   <h4>✅ 优点：</h4>
@@ -127,33 +127,32 @@ ZMAIL 现在采用全新的一体化部署方式，前端和后端整合为一�
     <li>可以获得后续代码更新</li>
     <li>完全自定义配置</li>
     <li>更好的版本控制</li>
+    <li>通过 GitHub Action 自动部署，更加安全便捷</li>
   </ul>
   
   <h4>❌ 缺点：</h4>
   <ul>
-    <li>需要手动修改配置文件</li>
     <li>需要一定的技术基础</li>
-    <li>需要手动创建数据库</li>
+    <li>需要手动创建数据库和配置密钥</li>
   </ul>
   
   <h4>📋 部署步骤：</h4>
   <ol>
     <li>Fork 本项目到您的 GitHub 账户</li>
-    <li>在 Cloudflare Dashboard 中创建一个 D1 数据库，记住数据库的 name 和 id</li>
-    <li>修改根目录下的 <code>wrangler.toml</code> 文件：
+    <li>在 Cloudflare Dashboard 中创建一个 D1 数据库，并记录下数据库的 <strong>database_name</strong> 和 <strong>database_id</strong></li>
+    <li>在您的 GitHub 仓库中, 前往 <strong>Settings</strong> > <strong>Secrets and variables</strong> > <strong>Actions</strong></li>
+    <li>点击 <strong>New repository secret</strong> 并添加以下五个密钥：
       <ul>
-        <li>修改 <code>name</code> 为您的应用名称。（可选）</li>
-        <li>修改 <code>routes</code> 中的自定义域名。（必须！默认的worker.dev域名在中国大陆无法访问）</li>
-        <li>修改 <code>database_name</code> 和 <code>database_id</code> 为您的 D1 数据库信息。（必须！）</li>
-        <li>修改 <code>VITE_EMAIL_DOMAIN</code> 为您的域名列表。（可选，只是方便网页上复制粘贴邮件地址使用，不设置也不影响接收邮件）</li>
+        <li><code>CF_API_TOKEN</code>: 你的 Cloudflare API Token。你可以在 <a href="https://dash.cloudflare.com/profile/api-tokens" target="_blank">这里</a> 创建，使用 "Edit Cloudflare Workers" 模板即可。</li>
+        <li><code>CF_ACCOUNT_ID</code>: 你的 Cloudflare 账户 ID。你可以在 Workers 页面的右侧找到。</li>
+        <li><code>D1_DATABASE_ID</code>: 你在第二步中创建的 D1 数据库的 ID。</li>
+        <li><code>D1_DATABASE_NAME</code>: 你在第二步中创建的 D1 数据库的名称。</li>
+        <li><code>VITE_EMAIL_DOMAIN</code>: 你的域名列表，多个域名用逗号 ',' 分割 (例如: example.com,test.com)。</li>
       </ul>
     </li>
-    <li>在 Cloudflare Dashboard 中选择 "Workers & Pages"</li>
-    <li>点击 "Create application" -> "Pages" -> "Connect to Git"</li>
-    <li>选择您 Fork 的仓库</li>
-    <li>配置构建设置（通常会自动检测）</li>
-    <li>点击 "Save and Deploy"</li>
-    <li>配置 Cloudflare Email 路由，将邮件转发到您的 Worker</li>
+    <li>完成以上步骤后，项目将在每次推送到 <code>main</code> 分支时自动部署。你也可以在 Actions 页面手动触发部署。</li>
+    <li>部署完成后，为你的 Worker 绑定一个自定义域名。</li>
+    <li>最后，配置 Cloudflare Email 路由，将邮件转发到你的 Worker。</li>
   </ol>
 </div>
 
