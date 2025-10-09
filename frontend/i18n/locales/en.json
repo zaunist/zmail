@@ -57,14 +57,19 @@
     "notFound": "Mailbox not found or expired",
     "creatingNew": "Creating new mailbox...",
     "switch": "Switch Mailbox",
+    "switchSuccess": "Mailbox switched successfully",
     "savedMailboxes": "Saved Mailboxes",
     "confirmDeleteMailbox": "Are you sure you want to delete this saved mailbox?",
+    "deleteSavedSuccess": "Saved mailbox deleted successfully",
     "confirmClearAllMailboxes": "Are you sure you want to clear all saved mailboxes? (The current mailbox will not be deleted)",
-    "clearAll": "Clear All"
+    "clearAll": "Clear All",
+    "clearAllSuccess": "All saved mailboxes have been cleared",
+    "clearAllFailed": "Failed to clear some mailboxes ({{count}})"
   },
   "email": {
     "inbox": "Inbox",
     "refresh": "Refresh Emails",
+    "refreshSuccess": "Email list has been refreshed",
     "autoRefresh": "Auto Refresh",
     "autoRefreshOn": "Auto Refresh: On",
     "autoRefreshOff": "Auto Refresh: Off",

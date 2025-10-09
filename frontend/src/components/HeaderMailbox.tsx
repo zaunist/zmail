@@ -1,8 +1,8 @@
-import React, { useState, useRef, useEffect, useContext } from 'react'; // feat: 导入 useContext
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { createRandomMailbox, createCustomMailbox } from '../utils/api';
 import MailboxSwitcher from './MailboxSwitcher';
-import { MailboxContext } from '../contexts/MailboxContext'; // feat: 导入 MailboxContext
+import { MailboxContext } from '../contexts/MailboxContext';
 
 interface HeaderMailboxProps {
   mailbox: Mailbox | null;
@@ -20,35 +20,17 @@ const HeaderMailbox: React.FC<HeaderMailboxProps> = ({
   isLoading
 }) => {
   const { t } = useTranslation();
-  // feat: 从 context 中获取全局通知函数
+  // feat: 统一使用全局通知
   const { showSuccessMessage, showErrorMessage } = useContext(MailboxContext);
   const [isCustomMode, setIsCustomMode] = useState(false);
   const [customAddress, setCustomAddress] = useState('');
   const [selectedDomain, setSelectedDomain] = useState(domain);
   const [isActionLoading, setIsActionLoading] = useState(false);
-  const [showCopyTooltip, setShowCopyTooltip] = useState(false);
-  // fix: 移除独立的错误状态，因为将使用全局通知
   const [customAddressError, setCustomAddressError] = useState<string | null>(null);
-  const [showRefreshSuccess, setShowRefreshSuccess] = useState(false);
-  const copyTooltipTimeoutRef = useRef<number | null>(null);
-  const refreshSuccessTimeoutRef = useRef<number | null>(null);
-  
-  // 当props中的domain变化时更新selectedDomain
+
   useEffect(() => {
     setSelectedDomain(domain);
   }, [domain]);
-  
-  // 清除提示的定时器
-  useEffect(() => {
-    return () => {
-      if (copyTooltipTimeoutRef.current) {
-        window.clearTimeout(copyTooltipTimeoutRef.current);
-      }
-      if (refreshSuccessTimeoutRef.current) {
-        window.clearTimeout(refreshSuccessTimeoutRef.current);
-      }
-    };
-  }, []);
   
   if (!mailbox || isLoading) return null;
   
@@ -57,16 +39,8 @@ const HeaderMailbox: React.FC<HeaderMailboxProps> = ({
     const fullAddress = mailbox.address.includes('@') ? mailbox.address : `${mailbox.address}@${selectedDomain}`;
     navigator.clipboard.writeText(fullAddress)
       .then(() => {
-        // 显示复制成功提示 (Tooltip 形式，保留局部状态)
-        setShowCopyTooltip(true);
-        
-        // 2秒后隐藏提示
-        if (copyTooltipTimeoutRef.current) {
-          window.clearTimeout(copyTooltipTimeoutRef.current);
-        }
-        copyTooltipTimeoutRef.current = window.setTimeout(() => {
-          setShowCopyTooltip(false);
-        }, 2000);
+        // feat: 使用全局通知替换 Tooltip
+        showSuccessMessage(t('mailbox.copySuccess'));
       })
       .catch(() => {
         // fix: 使用全局通知函数显示复制失败
@@ -82,17 +56,8 @@ const HeaderMailbox: React.FC<HeaderMailboxProps> = ({
     
     if (result.success && result.mailbox) {
       onMailboxChange(result.mailbox);
-      
-      // 显示更新成功提示 (Tooltip 形式，保留局部状态)
-      setShowRefreshSuccess(true);
-      
-      // 3秒后隐藏提示
-      if (refreshSuccessTimeoutRef.current) {
-        window.clearTimeout(refreshSuccessTimeoutRef.current);
-      }
-      refreshSuccessTimeoutRef.current = window.setTimeout(() => {
-        setShowRefreshSuccess(false);
-      }, 3000);
+      // feat: 使用全局通知替换 Tooltip
+      showSuccessMessage(t('mailbox.refreshSuccess'));
     } else {
       // fix: 使用全局通知函数显示刷新失败
       showErrorMessage(t('mailbox.refreshFailed'));
@@ -120,17 +85,14 @@ const HeaderMailbox: React.FC<HeaderMailboxProps> = ({
       // fix: 使用全局通知函数显示成功
       showSuccessMessage(t('mailbox.createSuccess'));
       
-      // 3秒后自动关闭表单
+      // 成功后延迟关闭自定义输入框
       setTimeout(() => {
         setIsCustomMode(false);
         setCustomAddress('');
-      }, 3000);
+      }, 1500);
+
     } else {
-      // 检查错误信息是否包含"邮箱地址已存在"
-      const isAddressExistsError = 
-        result.error === 'Address already exists' || 
-        String(result.error).includes('已存在');
-      
+      const isAddressExistsError = result.error === 'Address already exists' || String(result.error).includes('已存在');
       if (isAddressExistsError) {
         // fix: 对于表单内校验错误，保留局部状态提示
         setCustomAddressError(t('mailbox.addressExists'));
@@ -272,22 +234,14 @@ const HeaderMailbox: React.FC<HeaderMailboxProps> = ({
               />
               
               <div className="relative">
-              <button 
-                onClick={copyToClipboard}
+                <button 
+                  onClick={copyToClipboard}
                   className={`w-8 h-8 ${copyButtonClass}`}
                   aria-label={t('common.copy')}
                   title={t('common.copy')}
-              >
+                >
                   <i className="fas fa-copy text-sm"></i>
                 </button>
-                
-                {/* 复制成功提示 */}
-                {showCopyTooltip && (
-                  <div className="absolute top-9 left-1/2 transform -translate-x-1/2 bg-primary text-primary-foreground text-xs py-1 px-2 rounded shadow-lg whitespace-nowrap z-10">
-                    {t('mailbox.copySuccess')}
-                    <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-primary rotate-45"></div>
-                  </div>
-                )}
               </div>
               
               <div className="relative">
@@ -299,14 +253,6 @@ const HeaderMailbox: React.FC<HeaderMailboxProps> = ({
                 >
                   <i className="fas fa-sync-alt text-sm"></i>
                 </button>
-                
-                {/* 更新成功提示 */}
-                {showRefreshSuccess && (
-                  <div className="absolute top-9 left-1/2 transform -translate-x-1/2 bg-primary text-primary-foreground text-xs py-1 px-2 rounded shadow-lg whitespace-nowrap z-10">
-                    {t('mailbox.refreshSuccess')}
-                    <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-primary rotate-45"></div>
-                  </div>
-                )}
               </div>
               
               <button
@@ -337,22 +283,14 @@ const HeaderMailbox: React.FC<HeaderMailboxProps> = ({
               </div>
               
               <div className="relative">
-              <button 
-                onClick={copyToClipboard}
+                <button 
+                  onClick={copyToClipboard}
                   className={`w-6 h-6 ${copyButtonClass}`}
                   aria-label={t('common.copy')}
                   title={t('common.copy')}
-              >
+                >
                   <i className="fas fa-copy text-xs"></i>
                 </button>
-                
-                {/* 复制成功提示 */}
-                {showCopyTooltip && (
-                  <div className="absolute top-7 left-1/2 transform -translate-x-1/2 bg-primary text-primary-foreground text-xs py-1 px-2 rounded shadow-lg whitespace-nowrap z-10">
-                    {t('mailbox.copySuccess')}
-                    <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-primary rotate-45"></div>
-                  </div>
-                )}
               </div>
             </div>
             
@@ -360,29 +298,21 @@ const HeaderMailbox: React.FC<HeaderMailboxProps> = ({
               <div className="relative">
                 <button
                   onClick={handleRefreshMailbox}
-                    className={`w-6 h-6 ${refreshButtonClass}`}
+                  className={`w-6 h-6 ${refreshButtonClass}`}
                   disabled={isActionLoading}
-                    title={t('mailbox.refresh')}
+                  title={t('mailbox.refresh')}
                 >
-                    <i className="fas fa-sync-alt text-xs"></i>
+                  <i className="fas fa-sync-alt text-xs"></i>
                 </button>
-                
-                  {/* 更新成功提示 */}
-                {showRefreshSuccess && (
-                    <div className="absolute top-7 left-1/2 transform -translate-x-1/2 bg-primary text-primary-foreground text-xs py-1 px-2 rounded shadow-lg whitespace-nowrap z-10">
-                    {t('mailbox.refreshSuccess')}
-                      <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-primary rotate-45"></div>
-                  </div>
-                )}
               </div>
       
               <button
                 onClick={() => setIsCustomMode(true)}
-                    className={`w-6 h-6 ${customizeButtonClass}`}
+                className={`w-6 h-6 ${customizeButtonClass}`}
                 disabled={isActionLoading}
-                    title={t('mailbox.customize')}
+                title={t('mailbox.customize')}
               >
-                    <i className="fas fa-edit text-xs"></i>
+                <i className="fas fa-edit text-xs"></i>
               </button>
             </div>
           </div>

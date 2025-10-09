@@ -62,7 +62,8 @@ const EmailList: React.FC<EmailListProps> = ({
   };
   
   const handleRefresh = () => {
-    refreshEmails();
+    // feat: 调用 context 中的 refreshEmails，并传入 true 表示是手动刷新
+    refreshEmails(true);
   };
   
   const toggleAutoRefresh = () => {
