@@ -57,7 +57,10 @@
     "notFound": "邮箱不存在或已过期",
     "creatingNew": "正在创建新邮箱...",
     "switch": "切换邮箱",
-    "savedMailboxes": "已保存的邮箱"
+    "savedMailboxes": "已保存的邮箱",
+    "confirmDeleteMailbox": "您确定要删除这个已保存的邮箱吗？",
+    "confirmClearAllMailboxes": "您确定要清空所有已保存的邮箱吗？（当前使用的邮箱不会被删除）",
+    "clearAll": "全部清除"
   },
   "email": {
     "inbox": "收件箱",
@@ -90,7 +93,8 @@
     "messages": "封邮件"
   },
   "settings": {
-    "language": "语言"
+    "language": "语言",
+    "toggleTheme": "切换主题"
   },
   "errors": {
     "generic": "发生错误，请稍后重试",

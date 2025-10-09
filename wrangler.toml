@@ -8,14 +8,16 @@ compatibility_date = "2025-03-01"
 keep_vars = true
 
 # 启用 D1 数据库
+# 注意：这里的 binding 是固定的 "DB"，database_name 和 database_id 将由 GitHub Action 动态替换
 [[d1_databases]]
 binding = "DB"
-database_name = "zmail"  # 替换为您的实际的数据库 NAME
-database_id = "d77b6f63-43ad-46a9-8a49-d4a2706be53e"  # 需要替换为您的实际数据库 ID
+database_name = "${D1_DATABASE_NAME}"  # 这是 D1 数据库名称的占位符
+database_id = "${D1_DATABASE_ID}"      # 这是 D1 数据库 ID 的占位符
 
 # 设置域名
+# 注意：这里的 VITE_EMAIL_DOMAIN 将由 GitHub Action 动态替换
 [vars]
-VITE_EMAIL_DOMAIN = "mdzz.uk,zaunist.com"   # 替换为您的域名列表，多个域名使用逗号 , 分割。这里的域名只是用来网页上展示，方便复制粘贴使用。
+VITE_EMAIL_DOMAIN = "${VITE_EMAIL_DOMAIN}"   # 这是邮箱域名的占位符
 
 # 配置邮件处理
 [triggers]

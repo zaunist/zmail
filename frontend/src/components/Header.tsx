@@ -5,6 +5,7 @@ import LanguageSwitcher from './LanguageSwitcher';
 import HeaderMailbox from './HeaderMailbox';
 import Container from './Container';
 import { getEmailDomains, getDefaultEmailDomain, EMAIL_DOMAINS, DEFAULT_EMAIL_DOMAIN } from '../config';
+import ThemeSwitcher from './ThemeSwitcher'; // 导入新增的主题切换组件
 
 interface HeaderProps {
   mailbox: Mailbox | null;
@@ -56,6 +57,8 @@ const Header: React.FC<HeaderProps> = ({
                 isLoading={isLoading}
               />
               <div className="ml-3 pl-3 border-l border-muted-foreground/20 flex items-center">
+                {/* 在这里添加主题切换组件 */}
+                <ThemeSwitcher />
                 <LanguageSwitcher />
                 <a
                   href="https://github.com/zaunist/zmail"

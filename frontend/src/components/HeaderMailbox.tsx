@@ -198,8 +198,10 @@ const HeaderMailbox: React.FC<HeaderMailboxProps> = ({
   };
   
   // 切换域名
-  const handleDomainChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleDomainChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedDomain(e.target.value);
+    // [fix] 切换域名后自动更换邮箱
+    await handleRefreshMailbox();
   };
   
   // 按钮基础样式
@@ -231,15 +233,21 @@ const HeaderMailbox: React.FC<HeaderMailboxProps> = ({
               />
               <span className="flex items-center px-2 py-1 text-sm border-y border-r rounded-r-md bg-muted">
                 @
-                <select 
-                  value={selectedDomain}
-                  onChange={handleDomainChange}
-                  className="bg-transparent border-none focus:outline-none"
-                >
-                  {domains.map(d => (
-                    <option key={d} value={d}>{d}</option>
-                  ))}
-                </select>
+                {/* [fix]: 为select包裹一个relative容器，用于绝对定位自定义箭头 */}
+                <div className="relative">
+                  <select 
+                    value={selectedDomain}
+                    onChange={handleDomainChange}
+                    // [fix]: 添加 appearance-none 移除原生样式，并增加padding-right为箭头留出空间
+                    className="appearance-none bg-transparent border-none focus:outline-none pl-1 pr-5"
+                  >
+                    {domains.map(d => (
+                      <option key={d} value={d}>{d}</option>
+                    ))}
+                  </select>
+                  {/* [fix]: 添加自定义的下拉箭头图标 */}
+                  <i className="fas fa-chevron-down absolute right-0 top-1/2 -translate-y-1/2 text-xs text-muted-foreground pointer-events-none"></i>
+                </div>
               </span>
             </div>
             <button
@@ -278,17 +286,23 @@ const HeaderMailbox: React.FC<HeaderMailboxProps> = ({
           <div className="flex items-center">
             {/* 电脑端邮箱地址显示 */}
             <div className="hidden sm:flex items-center">
-              <code className="bg-muted px-2 py-1 rounded text-sm font-medium">
+              <code className="bg-muted px-2 py-1 rounded text-sm font-medium flex items-center">
                 {mailbox.address}@
-                <select 
-                  value={selectedDomain}
-                  onChange={handleDomainChange}
-                  className="bg-transparent border-none focus:outline-none px-0 py-0 font-medium"
-                >
-                  {domains.map(d => (
-                    <option key={d} value={d}>{d}</option>
-                  ))}
-                </select>
+                {/* [fix]: 为select包裹一个relative容器，用于绝对定位自定义箭头 */}
+                <div className="relative">
+                  <select 
+                    value={selectedDomain}
+                    onChange={handleDomainChange}
+                    // [fix]: 添加 appearance-none 移除原生样式，并增加padding-right为箭头留出空间
+                    className="appearance-none bg-transparent border-none focus:outline-none pl-1 pr-4 font-medium"
+                  >
+                    {domains.map(d => (
+                      <option key={d} value={d}>{d}</option>
+                    ))}
+                  </select>
+                  {/* [fix]: 添加自定义的下拉箭头图标 */}
+                  <i className="fas fa-chevron-down absolute right-0 top-1/2 -translate-y-1/2 text-xs text-muted-foreground pointer-events-none"></i>
+                </div>
               </code>
               
               {/* 添加邮箱切换组件 */}
