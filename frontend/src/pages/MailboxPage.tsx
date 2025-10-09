@@ -15,28 +15,15 @@ const MailboxPage: React.FC = () => {
     emails, 
     isEmailsLoading, 
     autoRefresh, 
-    setAutoRefresh 
+    setAutoRefresh,
+    // feat: 从 context 中获取全局通知函数
+    showSuccessMessage,
+    showErrorMessage
   } = useContext(MailboxContext);
   
   const [mailbox, setMailbox] = useState<Mailbox | null>(null);
   const [selectedEmail, setSelectedEmail] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const errorTimeoutRef = useRef<number | null>(null);
-  const successTimeoutRef = useRef<number | null>(null);
-  
-  // 清除提示的定时器
-  useEffect(() => {
-    return () => {
-      if (errorTimeoutRef.current) {
-        window.clearTimeout(errorTimeoutRef.current);
-      }
-      if (successTimeoutRef.current) {
-        window.clearTimeout(successTimeoutRef.current);
-      }
-    };
-  }, []);
   
   // 获取邮箱信息
   useEffect(() => {
@@ -49,13 +36,11 @@ const MailboxPage: React.FC = () => {
         
         if (!response.ok) {
           if (response.status === 404) {
-            setErrorMessage(t('mailbox.invalidAddress'));
+            // fix: 使用全局通知函数
+            showErrorMessage(t('mailbox.invalidAddress'));
             
             // 3秒后导航到首页
-            if (errorTimeoutRef.current) {
-              window.clearTimeout(errorTimeoutRef.current);
-            }
-            errorTimeoutRef.current = window.setTimeout(() => {
+            setTimeout(() => {
               navigate('/');
             }, 3000);
             return;
@@ -70,22 +55,15 @@ const MailboxPage: React.FC = () => {
           throw new Error(data.error || 'Unknown error');
         }
       } catch (error) {
-        setErrorMessage(String(error));
-        
-        // 3秒后清除错误信息
-        if (errorTimeoutRef.current) {
-          window.clearTimeout(errorTimeoutRef.current);
-        }
-        errorTimeoutRef.current = window.setTimeout(() => {
-          setErrorMessage(null);
-        }, 3000);
+        // fix: 使用全局通知函数
+        showErrorMessage(String(error));
       } finally {
         setIsLoading(false);
       }
     };
     
     fetchMailbox();
-  }, [address, navigate, t]);
+  }, [address, navigate, t, showErrorMessage]);
   
   // 处理删除邮箱
   const handleDeleteMailbox = async () => {
@@ -102,39 +80,25 @@ const MailboxPage: React.FC = () => {
       
       const data = await response.json();
       if (data.success) {
-        setSuccessMessage(t('mailbox.deleteSuccess'));
+        // fix: 使用全局通知函数
+        showSuccessMessage(t('mailbox.deleteSuccess'));
         
         // 2秒后导航到首页
-        if (successTimeoutRef.current) {
-          window.clearTimeout(successTimeoutRef.current);
-        }
-        successTimeoutRef.current = window.setTimeout(() => {
+        setTimeout(() => {
           navigate('/');
         }, 2000);
       } else {
         throw new Error(data.error || 'Unknown error');
       }
     } catch (error) {
-      setErrorMessage(t('mailbox.deleteFailed'));
-      
-      // 3秒后清除错误信息
-      if (errorTimeoutRef.current) {
-        window.clearTimeout(errorTimeoutRef.current);
-      }
-      errorTimeoutRef.current = window.setTimeout(() => {
-        setErrorMessage(null);
-      }, 3000);
+      // fix: 使用全局通知函数
+      showErrorMessage(t('mailbox.deleteFailed'));
     }
   };
   
   return (
     <div className="flex flex-col space-y-6">
-      {/* 错误和成功提示 */}
-      {(errorMessage || successMessage) && (
-        <div className={`p-3 rounded-md ${errorMessage ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}`}>
-          {errorMessage || successMessage}
-        </div>
-      )}
+      {/* fix: 移除局部的错误和成功提示 */}
       
       {mailbox && (
         <MailboxInfo 

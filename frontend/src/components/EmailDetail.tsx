@@ -21,35 +21,16 @@ interface Attachment {
 
 const EmailDetail: React.FC<EmailDetailProps> = ({ emailId, onClose }) => {
   const { t } = useTranslation();
-  const { emailCache, addToEmailCache, handleMailboxNotFound } = useContext(MailboxContext);
+  // fix: 从 context 中获取全局通知函数
+  const { emailCache, addToEmailCache, handleMailboxNotFound, showErrorMessage, showSuccessMessage } = useContext(MailboxContext);
   const [email, setEmail] = useState<Email | null>(null);
   const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingAttachments, setIsLoadingAttachments] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const errorTimeoutRef = useRef<number | null>(null);
-  const successTimeoutRef = useRef<number | null>(null);
-  
-  // 清除提示的定时器
-  useEffect(() => {
-    return () => {
-      if (errorTimeoutRef.current) {
-        window.clearTimeout(errorTimeoutRef.current);
-      }
-      if (successTimeoutRef.current) {
-        window.clearTimeout(successTimeoutRef.current);
-      }
-    };
-  }, []);
   
   useEffect(() => {
     const fetchEmail = async () => {
       try {
-        // 清除之前的错误和成功信息
-        setErrorMessage(null);
-        setSuccessMessage(null);
-        
         // 首先检查缓存中是否有该邮件
         if (emailCache[emailId]) {
           setEmail(emailCache[emailId].email);
@@ -86,22 +67,15 @@ const EmailDetail: React.FC<EmailDetailProps> = ({ emailId, onClose }) => {
           throw new Error(data.error || 'Unknown error');
         }
       } catch (error) {
-        setErrorMessage(t('email.fetchFailed'));
-        
-        // 3秒后清除错误信息
-        if (errorTimeoutRef.current) {
-          window.clearTimeout(errorTimeoutRef.current);
-        }
-        errorTimeoutRef.current = window.setTimeout(() => {
-          setErrorMessage(null);
-        }, 3000);
+        // fix: 使用全局通知函数
+        showErrorMessage(t('email.fetchFailed'));
       } finally {
         setIsLoading(false);
       }
     };
     
     fetchEmail();
-  }, [emailId, t, emailCache, addToEmailCache, handleMailboxNotFound, onClose]);
+  }, [emailId, t, emailCache, addToEmailCache, handleMailboxNotFound, onClose, showErrorMessage]);
   
   const fetchAttachments = async (emailId: string, emailData?: Email) => {
     try {
@@ -138,10 +112,6 @@ const EmailDetail: React.FC<EmailDetailProps> = ({ emailId, onClose }) => {
   
   const handleDelete = async () => {
     try {
-      // 清除之前的错误和成功信息
-      setErrorMessage(null);
-      setSuccessMessage(null);
-      
       const response = await fetch(`${API_BASE_URL}/api/emails/${emailId}`, {
         method: 'DELETE',
       });
@@ -152,28 +122,19 @@ const EmailDetail: React.FC<EmailDetailProps> = ({ emailId, onClose }) => {
       
       const data = await response.json();
       if (data.success) {
-        setSuccessMessage(t('email.deleteSuccess'));
+        // fix: 使用全局通知函数
+        showSuccessMessage(t('email.deleteSuccess'));
         
         // 2秒后关闭邮件详情
-        if (successTimeoutRef.current) {
-          window.clearTimeout(successTimeoutRef.current);
-        }
-        successTimeoutRef.current = window.setTimeout(() => {
+        setTimeout(() => {
           onClose();
         }, 2000);
       } else {
         throw new Error(data.error || 'Unknown error');
       }
     } catch (error) {
-      setErrorMessage(t('email.deleteFailed'));
-      
-      // 3秒后清除错误信息
-      if (errorTimeoutRef.current) {
-        window.clearTimeout(errorTimeoutRef.current);
-      }
-      errorTimeoutRef.current = window.setTimeout(() => {
-        setErrorMessage(null);
-      }, 3000);
+      // fix: 使用全局通知函数
+      showErrorMessage(t('email.deleteFailed'));
     }
   };
   
@@ -285,13 +246,7 @@ const EmailDetail: React.FC<EmailDetailProps> = ({ emailId, onClose }) => {
   
   return (
     <div className="border rounded-lg p-6">
-      {/* 错误和成功提示 */}
-      {(errorMessage || successMessage) && (
-        <div className={`p-3 mb-4 rounded-md ${errorMessage ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}`}>
-          {errorMessage || successMessage}
-        </div>
-      )}
-      
+      {/* fix: 移除局部的错误和成功提示，使用全局通知 */}
       {isLoading ? (
         <div className="flex items-center justify-center h-64">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>

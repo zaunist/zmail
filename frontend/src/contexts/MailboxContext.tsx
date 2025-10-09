@@ -40,6 +40,9 @@ interface MailboxContextType {
   handleMailboxNotFound: () => Promise<void>;
   errorMessage: string | null;
   successMessage: string | null;
+  // feat: 添加用于显示全局通知的函数
+  showSuccessMessage: (message: string) => void;
+  showErrorMessage: (message: string) => void;
 }
 
 export const MailboxContext = createContext<MailboxContextType>({
@@ -62,7 +65,10 @@ export const MailboxContext = createContext<MailboxContextType>({
   clearEmailCache: () => {},
   handleMailboxNotFound: async () => {},
   errorMessage: null,
-  successMessage: null
+  successMessage: null,
+  // feat: 提供默认空函数
+  showSuccessMessage: () => {},
+  showErrorMessage: () => {},
 });
 
 interface MailboxProviderProps {
@@ -82,6 +88,29 @@ export const MailboxProvider: React.FC<MailboxProviderProps> = ({ children }) =>
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const errorTimeoutRef = useRef<number | null>(null);
   const successTimeoutRef = useRef<number | null>(null);
+
+  // feat: 创建显示成功消息的函数
+  const showSuccessMessage = (message: string) => {
+    setSuccessMessage(message);
+    if (successTimeoutRef.current) {
+      window.clearTimeout(successTimeoutRef.current);
+    }
+    successTimeoutRef.current = window.setTimeout(() => {
+      setSuccessMessage(null);
+    }, 3000);
+  };
+
+  // feat: 创建显示错误消息的函数
+  const showErrorMessage = (message: string) => {
+    setErrorMessage(message);
+    if (errorTimeoutRef.current) {
+      window.clearTimeout(errorTimeoutRef.current);
+    }
+    errorTimeoutRef.current = window.setTimeout(() => {
+      setErrorMessage(null);
+    }, 3000);
+  };
+
 
   // 清除提示的定时器
   useEffect(() => {
@@ -137,15 +166,8 @@ export const MailboxProvider: React.FC<MailboxProviderProps> = ({ children }) =>
         clearEmailCache();
       } else {
         console.error('createNewMailbox: Failed to create mailbox:', result.error);
-        setErrorMessage(t('mailbox.createFailed'));
-
-        // 3秒后清除错误信息
-        if (errorTimeoutRef.current) {
-          window.clearTimeout(errorTimeoutRef.current);
-        }
-        errorTimeoutRef.current = window.setTimeout(() => {
-          setErrorMessage(null);
-        }, 3000);
+        // fix: 使用全局通知函数
+        showErrorMessage(t('mailbox.createFailed'));
         throw new Error('Failed to create mailbox');
       }
     } catch (error) {
@@ -169,8 +191,8 @@ export const MailboxProvider: React.FC<MailboxProviderProps> = ({ children }) =>
       const result = await apiDeleteMailbox(mailbox.address);
 
       if (result.success) {
-        // 显示成功信息
-        setSuccessMessage(t('mailbox.deleteSuccess'));
+        // fix: 使用全局通知函数
+        showSuccessMessage(t('mailbox.deleteSuccess'));
 
         // 清除本地数据
         setMailbox(null);
@@ -179,41 +201,17 @@ export const MailboxProvider: React.FC<MailboxProviderProps> = ({ children }) =>
         removeMailboxFromLocalStorage();
         clearEmailCache();
 
-        // 3秒后清除成功信息
-        if (successTimeoutRef.current) {
-          window.clearTimeout(successTimeoutRef.current);
-        }
-        successTimeoutRef.current = window.setTimeout(() => {
-          setSuccessMessage(null);
-        }, 3000);
-
         // 创建新邮箱
         await createNewMailbox();
       } else {
-        // 显示错误信息
-        setErrorMessage(t('mailbox.deleteFailed'));
-
-        // 3秒后清除错误信息
-        if (errorTimeoutRef.current) {
-          window.clearTimeout(errorTimeoutRef.current);
-        }
-        errorTimeoutRef.current = window.setTimeout(() => {
-          setErrorMessage(null);
-        }, 3000);
+        // fix: 使用全局通知函数
+        showErrorMessage(t('mailbox.deleteFailed'));
       }
     } catch (error) {
       console.error('Error deleting mailbox:', error);
 
-      // 显示错误信息
-      setErrorMessage(t('mailbox.deleteFailed'));
-
-      // 3秒后清除错误信息
-      if (errorTimeoutRef.current) {
-        window.clearTimeout(errorTimeoutRef.current);
-      }
-      errorTimeoutRef.current = window.setTimeout(() => {
-        setErrorMessage(null);
-      }, 3000);
+      // fix: 使用全局通知函数
+      showErrorMessage(t('mailbox.deleteFailed'));
     }
   };
 
@@ -265,8 +263,8 @@ export const MailboxProvider: React.FC<MailboxProviderProps> = ({ children }) =>
 
   // [fix]: 重构处理邮箱不存在的逻辑，避免页面刷新
   const handleMailboxNotFound = async () => {
-    // 设置提示信息，告知用户正在创建新邮箱
-    setSuccessMessage(t('mailbox.creatingNew'));
+    // fix: 使用全局通知函数
+    showSuccessMessage(t('mailbox.creatingNew'));
     
     // 清除当前无效的邮箱信息
     removeMailboxFromLocalStorage();
@@ -274,14 +272,6 @@ export const MailboxProvider: React.FC<MailboxProviderProps> = ({ children }) =>
     
     // 异步创建新邮箱，并更新应用状态
     await createNewMailbox();
-
-    // 3秒后清除提示信息
-    if (successTimeoutRef.current) {
-      window.clearTimeout(successTimeoutRef.current);
-    }
-    successTimeoutRef.current = window.setTimeout(() => {
-      setSuccessMessage(null);
-    }, 3000);
   };
 
   // 添加邮件到缓存
@@ -376,10 +366,13 @@ export const MailboxProvider: React.FC<MailboxProviderProps> = ({ children }) =>
         clearEmailCache,
         handleMailboxNotFound,
         errorMessage,
-        successMessage
+        successMessage,
+        // feat: 将函数添加到 context value 中
+        showSuccessMessage,
+        showErrorMessage,
       }}
     >
-      {/* [feat] 将错误和成功提示移至此处，作为全局通知组件 */}
+      {/* [feat] 全局通知组件 */}
       {(errorMessage || successMessage) && (
         <div className="fixed top-4 right-4 z-50 p-3 rounded-md shadow-lg max-w-md" style={{ backgroundColor: errorMessage ? '#FEE2E2' : '#ECFDF5', color: errorMessage ? '#991B1B' : '#065F46' }}>
           {errorMessage || successMessage}
