@@ -90,7 +90,8 @@
     "messages": "封邮件"
   },
   "settings": {
-    "language": "语言"
+    "language": "语言",
+    "toggleTheme": "切换主题"
   },
   "errors": {
     "generic": "发生错误，请稍后重试",

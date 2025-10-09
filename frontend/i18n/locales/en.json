@@ -90,7 +90,8 @@
     "messages": "messages"
   },
   "settings": {
-    "language": "Language"
+    "language": "Language",
+    "toggleTheme": "Toggle Theme"
   },
   "errors": {
     "generic": "An error occurred, please try again later",
