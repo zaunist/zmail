@@ -103,6 +103,27 @@ const MailboxSwitcher: React.FC<MailboxSwitcherProps> = ({
     setShowDropdown(false);
   };
 
+  // 删除单个已保存的邮箱
+  const handleDeleteMailbox = (address: string) => {
+    if (window.confirm(t('mailbox.confirmDeleteMailbox'))) {
+      const updatedMailboxes = savedMailboxes.filter(m => m.address !== address);
+      setSavedMailboxes(updatedMailboxes);
+      localStorage.setItem('savedMailboxes', JSON.stringify(updatedMailboxes));
+    }
+  };
+
+  // 清空所有已保存的邮箱
+  const handleClearAllMailboxes = () => {
+    if (window.confirm(t('mailbox.confirmClearAllMailboxes'))) {
+      const currentMailboxToKeep = savedMailboxes.find(m => m.address === currentMailbox.address);
+      const mailboxesToKeep = currentMailboxToKeep ? [currentMailboxToKeep] : [];
+      setSavedMailboxes(mailboxesToKeep);
+      localStorage.setItem('savedMailboxes', JSON.stringify(mailboxesToKeep));
+      setShowDropdown(false);
+    }
+  };
+
+
   // 如果没有保存的邮箱或者只有当前邮箱，不显示切换按钮
   if (savedMailboxes.length <= 1) {
     return null;
@@ -120,21 +141,39 @@ const MailboxSwitcher: React.FC<MailboxSwitcherProps> = ({
       </button>
 
       {showDropdown && (
-        <div className="absolute top-9 left-0 bg-white border rounded-md shadow-lg p-1 z-20 min-w-[200px]">
-          <div className="text-xs font-medium px-2 py-1 text-muted-foreground">
+        <div className="absolute top-9 left-0 bg-white border rounded-md shadow-lg p-1 z-20 min-w-[250px]">
+          <div className="text-xs font-medium px-2 py-1 text-muted-foreground flex justify-between items-center">
             {t('mailbox.savedMailboxes') || "已保存的邮箱"}
+            <button
+              onClick={handleClearAllMailboxes}
+              className="text-red-500 hover:text-red-700 text-xs"
+              title={t('mailbox.clearAll') || "全部清除"}
+            >
+              <i className="fas fa-trash-alt mr-1"></i>
+              {t('mailbox.clearAll') || "全部清除"}
+            </button>
           </div>
           <div className="max-h-[400px] overflow-y-auto">
             {savedMailboxes.map((m) => (
-              <button
-                key={m.address}
-                onClick={() => handleSwitchMailbox(m)}
-                className={`w-full text-left text-sm px-2 py-1.5 hover:bg-muted rounded-sm transition-colors truncate ${
-                  m.address === currentMailbox.address ? 'bg-primary/10 text-primary font-medium' : ''
-                }`}
-              >
-                {m.address}@{domain}
-              </button>
+              <div key={m.address} className="flex items-center justify-between hover:bg-muted rounded-sm">
+                <button
+                  onClick={() => handleSwitchMailbox(m)}
+                  className={`w-full text-left text-sm px-2 py-1.5 transition-colors truncate ${
+                    m.address === currentMailbox.address ? 'bg-primary/10 text-primary font-medium' : ''
+                  }`}
+                >
+                  {m.address}@{domain}
+                </button>
+                {m.address !== currentMailbox.address && (
+                  <button
+                    onClick={() => handleDeleteMailbox(m.address)}
+                    className="p-2 text-red-500 hover:text-red-700"
+                    title={t('common.delete') || "删除"}
+                  >
+                    <i className="fas fa-trash-alt text-xs"></i>
+                  </button>
+                )}
+              </div>
             ))}
           </div>
         </div>
