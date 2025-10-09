@@ -128,6 +128,7 @@ export async function getMailboxes(db: D1Database, ipAddress: string): Promise<M
  * @param address 邮箱地址
  */
 export async function deleteMailbox(db: D1Database, address: string): Promise<void> {
+  // [feat] 由于外键设置了 ON DELETE CASCADE，直接删除邮箱即可级联删除相关邮件和附件
   await db.prepare(`DELETE FROM mailboxes WHERE address = ?`).bind(address).run();
 }
 
@@ -137,39 +138,39 @@ export async function deleteMailbox(db: D1Database, address: string): Promise<vo
  * @returns 删除的附件数量
  */
 async function cleanupOrphanedAttachments(db: D1Database): Promise<number> {
-  try {
-    // 获取所有孤立附件的ID列表
-    const orphanedAttachments = await db.prepare(`SELECT id, is_large FROM attachments a WHERE NOT EXISTS (SELECT 1 FROM emails e WHERE e.id = a.email_id)`).all();
-    
-    if (!orphanedAttachments.results || orphanedAttachments.results.length === 0) {
-      return 0;
+    // [refactor] 优化孤立附件的清理逻辑
+    try {
+        // 一次性查询所有孤立附件及其分块信息
+        const orphanedAttachmentsResult = await db.prepare(`
+            SELECT a.id 
+            FROM attachments a 
+            LEFT JOIN emails e ON a.email_id = e.id 
+            WHERE e.id IS NULL
+        `).all<{ id: string }>();
+
+        if (!orphanedAttachmentsResult.results || orphanedAttachmentsResult.results.length === 0) {
+            return 0;
+        }
+
+        const attachmentIds = orphanedAttachmentsResult.results.map(row => row.id);
+        const placeholders = attachmentIds.map(() => '?').join(',');
+
+        console.log(`找到 ${attachmentIds.length} 个孤立附件，准备清理...`);
+
+        // 批量删除附件分块
+        await db.prepare(`DELETE FROM attachment_chunks WHERE attachment_id IN (${placeholders})`).bind(...attachmentIds).run();
+        console.log(`已清理孤立附件的所有分块`);
+
+        // 批量删除附件记录
+        const deleteResult = await db.prepare(`DELETE FROM attachments WHERE id IN (${placeholders})`).bind(...attachmentIds).run();
+        const deletedCount = deleteResult.meta?.changes || 0;
+        console.log(`已清理 ${deletedCount} 个孤立附件记录`);
+
+        return deletedCount;
+    } catch (error) {
+        console.error('清理孤立附件时出错:', error);
+        return 0;
     }
-    
-    console.log(`找到 ${orphanedAttachments.results.length} 个孤立附件，准备清理...`);
-    
-    // 清理每个孤立附件
-    for (const attachment of orphanedAttachments.results) {
-      const attachmentId = attachment.id as string;
-      const isLarge = !!attachment.is_large;
-      
-      // 如果是大型附件，先删除所有分块
-      if (isLarge) {
-        await db.prepare(`DELETE FROM attachment_chunks WHERE attachment_id = ?`).bind(attachmentId).run();
-        console.log(`已清理孤立附件 ${attachmentId} 的所有分块`);
-      }
-    }
-    
-    // 删除所有孤立附件记录
-    const result = await db.prepare(`DELETE FROM attachments WHERE NOT EXISTS (SELECT 1 FROM emails e WHERE e.id = attachments.email_id)`).run();
-    
-    const deletedCount = result.meta?.changes || 0;
-    console.log(`已清理 ${deletedCount} 个孤立附件记录`);
-    
-    return deletedCount;
-  } catch (error) {
-    console.error('清理孤立附件时出错:', error);
-    return 0;
-  }
 }
 
 /**
@@ -179,37 +180,12 @@ async function cleanupOrphanedAttachments(db: D1Database): Promise<number> {
  */
 export async function cleanupExpiredMailboxes(db: D1Database): Promise<number> {
   const now = getCurrentTimestamp();
-  
-  // 获取过期邮箱的ID列表
-  const expiredMailboxes = await db.prepare(`SELECT id FROM mailboxes WHERE expires_at <= ?`).bind(now).all();
-  
-  if (expiredMailboxes.results && expiredMailboxes.results.length > 0) {
-    const mailboxIds = expiredMailboxes.results.map(row => row.id as string);
-    
-    // 记录日志
-    console.log(`找到 ${mailboxIds.length} 个过期邮箱，准备清理...`);
-    
-    // 由于设置了外键级联删除，删除邮箱时会自动删除相关的邮件和附件
-    // 但为了确保附件被正确清理，我们先获取这些邮箱中的所有邮件ID
-    for (const mailboxId of mailboxIds) {
-      const emails = await db.prepare(`SELECT id FROM emails WHERE mailbox_id = ?`).bind(mailboxId).all();
-      
-      if (emails.results && emails.results.length > 0) {
-        const emailIds = emails.results.map(row => row.id as string);
-        console.log(`邮箱 ${mailboxId} 中有 ${emailIds.length} 封邮件需要清理`);
-        
-        // 清理每封邮件的附件
-        for (const emailId of emailIds) {
-          await cleanupAttachments(db, emailId);
-        }
-      }
-    }
-  }
-  
-  // 删除过期邮箱（会级联删除邮件和附件）
+  // [refactor] 由于数据库 schema 中设置了 ON DELETE CASCADE，
+  // 删除 mailboxes 表中的记录会自动删除 emails, attachments, 和 attachment_chunks 中所有相关的记录。
+  // 这大大简化了清理逻辑，并提高了性能。
   const result = await db.prepare(`DELETE FROM mailboxes WHERE expires_at <= ?`).bind(now).run();
   
-  // 清理可能存在的孤立附件
+  // 清理可能由于异常情况产生的孤立附件
   await cleanupOrphanedAttachments(db);
   
   return result.meta?.changes || 0;
@@ -224,23 +200,9 @@ export async function cleanupExpiredMails(db: D1Database): Promise<number> {
   const now = getCurrentTimestamp();
   const oneDayAgo = now - 24 * 60 * 60; // 24小时前的时间戳（秒）
   
-  // 获取过期邮件的ID列表
-  const expiredEmails = await db.prepare(`SELECT id FROM emails WHERE received_at <= ?`).bind(oneDayAgo).all();
-  
-  if (expiredEmails.results && expiredEmails.results.length > 0) {
-    const emailIds = expiredEmails.results.map(row => row.id as string);
-    console.log(`找到 ${emailIds.length} 封过期邮件，准备清理...`);
-    
-    // 清理每封邮件的附件
-    for (const emailId of emailIds) {
-      await cleanupAttachments(db, emailId);
-    }
-  }
-  
-  // 删除过期邮件（会级联删除附件）
+  // [refactor] 同样利用 ON DELETE CASCADE 特性简化逻辑
   const result = await db.prepare(`DELETE FROM emails WHERE received_at <= ?`).bind(oneDayAgo).run();
   
-  // 清理可能存在的孤立附件
   await cleanupOrphanedAttachments(db);
   
   return result.meta?.changes || 0;
@@ -252,23 +214,9 @@ export async function cleanupExpiredMails(db: D1Database): Promise<number> {
  * @returns 删除的邮件数量
  */
 export async function cleanupReadMails(db: D1Database): Promise<number> {
-  // 获取已读邮件的ID列表
-  const readEmails = await db.prepare(`SELECT id FROM emails WHERE is_read = 1`).all();
-  
-  if (readEmails.results && readEmails.results.length > 0) {
-    const emailIds = readEmails.results.map(row => row.id as string);
-    console.log(`找到 ${emailIds.length} 封已读邮件，准备清理...`);
-    
-    // 清理每封邮件的附件
-    for (const emailId of emailIds) {
-      await cleanupAttachments(db, emailId);
-    }
-  }
-  
-  // 删除已读邮件（会级联删除附件）
+  // [refactor] 同样利用 ON DELETE CASCADE 特性简化逻辑
   const result = await db.prepare(`DELETE FROM emails WHERE is_read = 1`).run();
   
-  // 清理可能存在的孤立附件
   await cleanupOrphanedAttachments(db);
   
   return result.meta?.changes || 0;
@@ -280,26 +228,24 @@ export async function cleanupReadMails(db: D1Database): Promise<number> {
  * @param emailId 邮件ID
  */
 async function cleanupAttachments(db: D1Database, emailId: string): Promise<void> {
+  // [refactor] 利用 ON DELETE CASCADE，此函数在删除邮件时不再需要手动调用。
+  // 但保留此函数以备其他需要单独清理附件的场景。
   try {
-    // 获取邮件的所有附件
-    const attachments = await db.prepare(`SELECT id, is_large FROM attachments WHERE email_id = ?`).bind(emailId).all();
+    // 获取邮件的所有附件ID
+    const attachmentsResult = await db.prepare(`SELECT id FROM attachments WHERE email_id = ?`).bind(emailId).all<{ id: string }>();
     
-    if (attachments.results && attachments.results.length > 0) {
-      console.log(`邮件 ${emailId} 有 ${attachments.results.length} 个附件需要清理`);
+    if (attachmentsResult.results && attachmentsResult.results.length > 0) {
+      const attachmentIds = attachmentsResult.results.map(row => row.id);
+      const placeholders = attachmentIds.map(() => '?').join(',');
+
+      console.log(`邮件 ${emailId} 有 ${attachmentIds.length} 个附件需要清理`);
       
-      for (const attachment of attachments.results) {
-        const attachmentId = attachment.id as string;
-        const isLarge = !!attachment.is_large;
-        
-        // 如果是大型附件，先删除所有分块
-        if (isLarge) {
-          await db.prepare(`DELETE FROM attachment_chunks WHERE attachment_id = ?`).bind(attachmentId).run();
-          console.log(`已清理附件 ${attachmentId} 的所有分块`);
-        }
-      }
+      // 批量删除所有分块
+      await db.prepare(`DELETE FROM attachment_chunks WHERE attachment_id IN (${placeholders})`).bind(...attachmentIds).run();
+      console.log(`已清理附件的所有分块`);
       
-      // 删除所有附件记录
-      await db.prepare(`DELETE FROM attachments WHERE email_id = ?`).bind(emailId).run();
+      // 批量删除所有附件记录
+      await db.prepare(`DELETE FROM attachments WHERE id IN (${placeholders})`).bind(...attachmentIds).run();
       console.log(`已清理邮件 ${emailId} 的所有附件`);
     }
   } catch (error) {
@@ -558,9 +504,6 @@ async function getAttachmentContent(db: D1Database, attachmentId: string, chunks
  * @param id 邮件ID
  */
 export async function deleteEmail(db: D1Database, id: string): Promise<void> {
-  // 先清理邮件的所有附件
-  await cleanupAttachments(db, id);
-  
-  // 然后删除邮件
+  // [refactor] 由于外键设置了 ON DELETE CASCADE，直接删除邮件即可
   await db.prepare(`DELETE FROM emails WHERE id = ?`).bind(id).run();
 }
