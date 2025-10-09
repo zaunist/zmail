@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+// [feat]: 导入 deleteMailbox API 函数
+import { deleteMailbox as apiDeleteMailbox } from '../utils/api';
 
 interface MailboxSwitcherProps {
   currentMailbox: Mailbox;
@@ -103,20 +105,44 @@ const MailboxSwitcher: React.FC<MailboxSwitcherProps> = ({
     setShowDropdown(false);
   };
 
-  // 删除单个已保存的邮箱
-  const handleDeleteMailbox = (address: string) => {
+  // 删除单个已保存的邮箱（包括后端）
+  const handleDeleteMailbox = async (address: string) => {
     if (window.confirm(t('mailbox.confirmDeleteMailbox'))) {
-      const updatedMailboxes = savedMailboxes.filter(m => m.address !== address);
-      setSavedMailboxes(updatedMailboxes);
-      localStorage.setItem('savedMailboxes', JSON.stringify(updatedMailboxes));
+      // 调用API删除后端的邮箱
+      const result = await apiDeleteMailbox(address);
+      if (result.success) {
+        // 从前端列表和localStorage中移除
+        const updatedMailboxes = savedMailboxes.filter(m => m.address !== address);
+        setSavedMailboxes(updatedMailboxes);
+        localStorage.setItem('savedMailboxes', JSON.stringify(updatedMailboxes));
+      } else {
+        // 如果删除失败，可以给用户一个提示
+        alert(t('mailbox.deleteFailed'));
+      }
     }
   };
 
-  // 清空所有已保存的邮箱
-  const handleClearAllMailboxes = () => {
+  // [feat]: 清空所有已保存的邮箱（包括后端数据）
+  const handleClearAllMailboxes = async () => {
     if (window.confirm(t('mailbox.confirmClearAllMailboxes'))) {
+      // 找出所有需要删除的邮箱（即列表中，非当前正在使用的邮箱）
+      const mailboxesToDelete = savedMailboxes.filter(m => m.address !== currentMailbox.address);
+      
+      // 如果没有需要删除的，直接返回
+      if(mailboxesToDelete.length === 0) {
+        setShowDropdown(false);
+        return;
+      }
+
+      // 并行执行所有后端删除请求
+      const deletePromises = mailboxesToDelete.map(m => apiDeleteMailbox(m.address));
+      await Promise.all(deletePromises);
+      
+      // 从前端列表中只保留当前使用的邮箱
       const currentMailboxToKeep = savedMailboxes.find(m => m.address === currentMailbox.address);
       const mailboxesToKeep = currentMailboxToKeep ? [currentMailboxToKeep] : [];
+      
+      // 更新UI和localStorage
       setSavedMailboxes(mailboxesToKeep);
       localStorage.setItem('savedMailboxes', JSON.stringify(mailboxesToKeep));
       setShowDropdown(false);
