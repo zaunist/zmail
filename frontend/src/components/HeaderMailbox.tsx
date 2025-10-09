@@ -198,8 +198,10 @@ const HeaderMailbox: React.FC<HeaderMailboxProps> = ({
   };
   
   // 切换域名
-  const handleDomainChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleDomainChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedDomain(e.target.value);
+    // [fix] 切换域名后自动更换邮箱
+    await handleRefreshMailbox();
   };
   
   // 按钮基础样式
