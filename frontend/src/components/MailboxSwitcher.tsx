@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react'; // feat: 导入 useContext
 import { useTranslation } from 'react-i18next';
-// [feat]: 导入 deleteMailbox API 函数
 import { deleteMailbox as apiDeleteMailbox } from '../utils/api';
+import { MailboxContext } from '../contexts/MailboxContext'; // feat: 导入 MailboxContext
 
 interface MailboxSwitcherProps {
   currentMailbox: Mailbox;
@@ -15,6 +15,8 @@ const MailboxSwitcher: React.FC<MailboxSwitcherProps> = ({
   domain
 }) => {
   const { t } = useTranslation();
+  // feat: 从 context 中获取全局通知函数
+  const { showSuccessMessage, showErrorMessage } = useContext(MailboxContext);
   const [savedMailboxes, setSavedMailboxes] = useState<Mailbox[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -103,9 +105,11 @@ const MailboxSwitcher: React.FC<MailboxSwitcherProps> = ({
   const handleSwitchMailbox = (mailbox: Mailbox) => {
     onSwitchMailbox(mailbox);
     setShowDropdown(false);
+    // feat: 切换邮箱也给出提示
+    showSuccessMessage(t('mailbox.switchSuccess'));
   };
 
-  // 删除单个已保存的邮箱（包括后端）
+  // 删除单个已保存的邮箱
   const handleDeleteMailbox = async (address: string) => {
     if (window.confirm(t('mailbox.confirmDeleteMailbox'))) {
       // 调用API删除后端的邮箱
@@ -115,14 +119,16 @@ const MailboxSwitcher: React.FC<MailboxSwitcherProps> = ({
         const updatedMailboxes = savedMailboxes.filter(m => m.address !== address);
         setSavedMailboxes(updatedMailboxes);
         localStorage.setItem('savedMailboxes', JSON.stringify(updatedMailboxes));
+        // feat: 删除成功提示
+        showSuccessMessage(t('mailbox.deleteSavedSuccess'));
       } else {
-        // 如果删除失败，可以给用户一个提示
-        alert(t('mailbox.deleteFailed'));
+        // feat: 删除失败提示
+        showErrorMessage(t('mailbox.deleteFailed'));
       }
     }
   };
 
-  // [feat]: 清空所有已保存的邮箱（包括后端数据）
+  // 清空所有已保存的邮箱
   const handleClearAllMailboxes = async () => {
     if (window.confirm(t('mailbox.confirmClearAllMailboxes'))) {
       // 找出所有需要删除的邮箱（即列表中，非当前正在使用的邮箱）
@@ -136,7 +142,8 @@ const MailboxSwitcher: React.FC<MailboxSwitcherProps> = ({
 
       // 并行执行所有后端删除请求
       const deletePromises = mailboxesToDelete.map(m => apiDeleteMailbox(m.address));
-      await Promise.all(deletePromises);
+      // feat: 使用 Promise.allSettled 来处理部分失败的情况
+      const results = await Promise.allSettled(deletePromises);
       
       // 从前端列表中只保留当前使用的邮箱
       const currentMailboxToKeep = savedMailboxes.find(m => m.address === currentMailbox.address);
@@ -146,6 +153,14 @@ const MailboxSwitcher: React.FC<MailboxSwitcherProps> = ({
       setSavedMailboxes(mailboxesToKeep);
       localStorage.setItem('savedMailboxes', JSON.stringify(mailboxesToKeep));
       setShowDropdown(false);
+
+      // feat: 根据结果显示不同的通知
+      const failedCount = results.filter(r => r.status === 'rejected').length;
+      if (failedCount > 0) {
+        showErrorMessage(t('mailbox.clearAllFailed', { count: failedCount }));
+      } else {
+        showSuccessMessage(t('mailbox.clearAllSuccess'));
+      }
     }
   };
 

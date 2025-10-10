@@ -57,14 +57,19 @@
     "notFound": "邮箱不存在或已过期",
     "creatingNew": "正在创建新邮箱...",
     "switch": "切换邮箱",
+    "switchSuccess": "邮箱切换成功",
     "savedMailboxes": "已保存的邮箱",
     "confirmDeleteMailbox": "您确定要删除这个已保存的邮箱吗？",
+    "deleteSavedSuccess": "已保存的邮箱删除成功",
     "confirmClearAllMailboxes": "您确定要清空所有已保存的邮箱吗？（当前使用的邮箱不会被删除）",
-    "clearAll": "全部清除"
+    "clearAll": "全部清除",
+    "clearAllSuccess": "已清空所有保存的邮箱",
+    "clearAllFailed": "部分邮箱清空失败 ({{count}}个)"
   },
   "email": {
     "inbox": "收件箱",
     "refresh": "刷新邮件",
+    "refreshSuccess": "邮件列表已刷新",
     "autoRefresh": "自动刷新",
     "autoRefreshOn": "自动刷新: 开",
     "autoRefreshOff": "自动刷新: 关",
