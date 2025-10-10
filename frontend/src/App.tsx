@@ -3,9 +3,6 @@ import { Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import HomePage from './pages/HomePage';
 import NotFoundPage from './pages/NotFoundPage';
-import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
-import TermsPage from './pages/TermsPage';
-import AboutPage from './pages/AboutPage';
 import { MailboxProvider } from './contexts/MailboxContext';
 
 const App: React.FC = () => {
@@ -16,9 +13,7 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/" element={<Layout />}>
               <Route index element={<HomePage />} />
-              <Route path="privacy-policy" element={<PrivacyPolicyPage />} />
-              <Route path="terms" element={<TermsPage />} />
-              <Route path="about" element={<AboutPage />} />
+              {/* 移除了 privacy-policy, terms, 和 about 的路由 */}
               <Route path="*" element={<NotFoundPage />} />
             </Route>
           </Routes>
