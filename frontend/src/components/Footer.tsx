@@ -1,9 +1,13 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import Container from "./Container";
-import { Link } from "react-router-dom";
 
-const Footer: React.FC = () => {
+// 定义 props 类型，允许父组件传递控制弹窗显示的函数
+interface FooterProps {
+  onShowInfo: (infoType: 'privacy' | 'terms' | 'about') => void;
+}
+
+const Footer: React.FC<FooterProps> = ({ onShowInfo }) => {
   const { t } = useTranslation();
   const year = new Date().getFullYear();
 
@@ -15,18 +19,25 @@ const Footer: React.FC = () => {
             © {year} {t("app.title")}
           </p>
           <div className="flex flex-wrap justify-center items-center space-x-4 mb-2">
-            <Link
-              to="/privacy-policy"
+            {/* 将 Link 组件修改为 button，点击时调用 onShowInfo 函数显示弹窗 */}
+            <button
+              onClick={() => onShowInfo('privacy')}
               className="hover:text-primary transition-colors"
             >
               {t("common.privacyPolicy", "隐私政策")}
-            </Link>
-            <Link to="/terms" className="hover:text-primary transition-colors">
+            </button>
+            <button
+              onClick={() => onShowInfo('terms')}
+              className="hover:text-primary transition-colors"
+            >
               {t("common.terms", "使用条款")}
-            </Link>
-            <Link to="/about" className="hover:text-primary transition-colors">
+            </button>
+            <button
+              onClick={() => onShowInfo('about')}
+              className="hover:text-primary transition-colors"
+            >
               {t("common.about", "关于我们")}
-            </Link>
+            </button>
           </div>
           <div className="flex justify-center items-center space-x-4">
             <a
