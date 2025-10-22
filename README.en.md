@@ -28,22 +28,6 @@
 
 ---
 
-## 📹 Video Tutorial
-
-1. **Project Introduction and Feature Demonstration**
-2. **Detailed Steps for Integrated Worker Deployment to Cloudflare**
-3. **How to Fork the Project and Customize Configuration**
-4. **Configuring Cloudflare Email Routing**
-5. **Setting up Environment Variables and D1 Database**
-
-<div align="center">
-  <a href="https://youtu.be/EHXijzlveqk" target="_blank">
-    <img src="https://img.shields.io/badge/Watch_YouTube_Tutorial-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="YouTube Tutorial" />
-  </a>
-</div>
-
----
-
 ## ✨ Features
 
 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 20px 0;">
@@ -239,10 +223,6 @@ pnpm run deploy
 ## 👥 Contributing
 
 Contributions via Pull Requests or Issues are welcome!
-
-## ⭐ Support Author
-
-- Youtube Channel: [阿杰鲁](https://www.youtube.com/@zaunist)
 
 ## 📄 License
 
