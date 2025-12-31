@@ -4,7 +4,7 @@ import Container from "./Container";
 
 // 定义 props 类型，允许父组件传递控制弹窗显示的函数
 interface FooterProps {
-  onShowInfo: (infoType: 'privacy' | 'terms' | 'about') => void;
+  onShowInfo: (infoType: "privacy" | "terms" | "about") => void;
 }
 
 const Footer: React.FC<FooterProps> = ({ onShowInfo }) => {
@@ -21,19 +21,19 @@ const Footer: React.FC<FooterProps> = ({ onShowInfo }) => {
           <div className="flex flex-wrap justify-center items-center space-x-4 mb-2">
             {/* 将 Link 组件修改为 button，点击时调用 onShowInfo 函数显示弹窗 */}
             <button
-              onClick={() => onShowInfo('privacy')}
+              onClick={() => onShowInfo("privacy")}
               className="hover:text-primary transition-colors"
             >
               {t("common.privacyPolicy", "隐私政策")}
             </button>
             <button
-              onClick={() => onShowInfo('terms')}
+              onClick={() => onShowInfo("terms")}
               className="hover:text-primary transition-colors"
             >
               {t("common.terms", "使用条款")}
             </button>
             <button
-              onClick={() => onShowInfo('about')}
+              onClick={() => onShowInfo("about")}
               className="hover:text-primary transition-colors"
             >
               {t("common.about", "关于我们")}
@@ -41,7 +41,7 @@ const Footer: React.FC<FooterProps> = ({ onShowInfo }) => {
           </div>
           <div className="flex justify-center items-center space-x-4">
             <a
-              href="https://zaunist.com"
+              href="https://ajielu.vercel.app"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-primary transition-colors"
