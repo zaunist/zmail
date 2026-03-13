@@ -189,4 +189,47 @@ export const getMailboxFromLocalStorage = (): Mailbox | null => {
 // 从本地存储删除邮箱信息
 export const removeMailboxFromLocalStorage = () => {
   localStorage.removeItem('tempMailbox');
-}; 
+};
+
+// Admin API client
+const adminHeaders = (token: string) => ({
+  'Content-Type': 'application/json',
+  Authorization: `Bearer ${token}`,
+});
+
+export const listApiKeys = async (token: string) => {
+  const res = await fetch(apiUrl('/admin/api-keys'), {
+    headers: adminHeaders(token),
+  });
+  const data = await res.json();
+  return { ok: res.ok, ...data };
+};
+
+export const createApiKeyAdmin = async (token: string, payload: { name: string; quota: number; expiresAt?: number | null; status?: string }) => {
+  const res = await fetch(apiUrl('/admin/api-keys'), {
+    method: 'POST',
+    headers: adminHeaders(token),
+    body: JSON.stringify(payload),
+  });
+  const data = await res.json();
+  return { ok: res.ok, ...data };
+};
+
+export const updateApiKeyAdmin = async (token: string, id: string, payload: { name?: string; quota?: number; expiresAt?: number | null; status?: string }) => {
+  const res = await fetch(apiUrl(`/admin/api-keys/${id}`), {
+    method: 'PATCH',
+    headers: adminHeaders(token),
+    body: JSON.stringify(payload),
+  });
+  const data = await res.json();
+  return { ok: res.ok, ...data };
+};
+
+export const disableApiKeyAdmin = async (token: string, id: string) => {
+  const res = await fetch(apiUrl(`/admin/api-keys/${id}`), {
+    method: 'DELETE',
+    headers: adminHeaders(token),
+  });
+  const data = await res.json();
+  return { ok: res.ok, ...data };
+};

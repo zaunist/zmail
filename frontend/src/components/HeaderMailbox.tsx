@@ -27,9 +27,14 @@ const HeaderMailbox: React.FC<HeaderMailboxProps> = ({
   const [selectedDomain, setSelectedDomain] = useState(domain);
   const [isActionLoading, setIsActionLoading] = useState(false);
   const [customAddressError, setCustomAddressError] = useState<string | null>(null);
+  const hasInitializedDomainRef = useRef(false);
 
   useEffect(() => {
-    setSelectedDomain(domain);
+    // 仅在初次加载时采用传入的默认域名；后续保持用户选择
+    if (!hasInitializedDomainRef.current) {
+      setSelectedDomain(domain);
+      hasInitializedDomainRef.current = true;
+    }
   }, [domain]);
   
   if (!mailbox || isLoading) return null;

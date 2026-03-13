@@ -76,3 +76,12 @@ export function generateRandomString(length: number): string {
     const date = new Date(timestamp * 1000);
     return date.toISOString();
   }
+
+  export function generateApiKey(): string {
+    const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let result = 'zk_';
+    for (let i = 0; i < 40; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+  }

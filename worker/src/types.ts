@@ -4,6 +4,8 @@ import { D1Database } from '@cloudflare/workers-types';
 export interface Env {
   DB: D1Database;
   VITE_EMAIL_DOMAIN?: string;
+  API_KEYS?: string; // legacy allowlist
+  ADMIN_TOKEN?: string;
 }
 
 // 邮箱类型
@@ -132,6 +134,35 @@ export interface ParsedEmail {
     content: ArrayBuffer;
     size?: number;
   }>;
+}
+
+// API Keys
+type ApiKeyStatus = 'active' | 'disabled';
+export interface ApiKeyRecord {
+  id: string;
+  key: string;
+  name: string;
+  quota: number;
+  usage: number;
+  status: ApiKeyStatus;
+  expiresAt: number | null;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface CreateApiKeyParams {
+  name: string;
+  quota: number;
+  expiresAt?: number | null;
+  status?: ApiKeyStatus;
+}
+
+export interface UpdateApiKeyParams {
+  id: string;
+  name?: string;
+  quota?: number;
+  expiresAt?: number | null;
+  status?: ApiKeyStatus;
 }
 
 // 发送邮件参数
